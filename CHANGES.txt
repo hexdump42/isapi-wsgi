@@ -1,0 +1,11 @@
+0.8-0.9 Added qwip_test.py as an example for running quixote apps via QWIP.
+Update README.txt to reflect new example.
+0.7 Added basic error handling to cope with Extension Errors that are generated
+when a client disconnects before the extension i/o has finished. 
+Reset self.headers and self.headers_sent in HttpExtensionProc so wsgi states are
+correct if Extension Error occurred in previous call.
+
+0.6 Change write method so it uses ecb.WriteClient rather than print redirection
+which was causing an Extension Error when running QWIP apps.
+
+0.4 First beta release
