@@ -6,7 +6,7 @@ License: MIT
 
 Description: An implementation of WSGI (PEP 333) for running as a ISAPI extension under IIS. WSGI is considered as important standard for the future of web deployed Python code. There are implementations for CGI, mod python, twisted, jython etc but to my knowledge not one using ISAPI for IIS. The goal of this project is to provide one. It is dependant on Mark Hammond's Python win32 isapi extension.
 
-Current status: I am happy with the functionality of the single threaded version of the handler. Beta release can be downloaded here but suggest you checkout directly from subversion (svn checkout https://isapi-wsgi.googlecode.com/svn/trunk/) as a couple of bugs have been fixed since beta distribution was created. Currently working on a fully threaded version. It has been used to run some WSGI enabled apps and adaptors.
+Current status: I am happy with the functionality of the single threaded version of the handler. You can checkout directly from subversion (svn checkout https://isapi-wsgi.googlecode.com/svn/trunk/). It has been used to run some WSGI enabled apps and adaptors.
 
 Mailing list: http://groups.google.com/group/isapi_wsgi-dev
 
