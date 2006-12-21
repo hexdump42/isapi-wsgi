@@ -15,7 +15,7 @@ Python 2.2 or better is required. To install, just unpack the archive, go to the
 
 python setup.py install
 
-isapi\_wsgi.py will be installed in the 'site-packages' directory of your Python installation. (Unless directed elsewhere; see the "Installing Python Modules" section of the Python manuals for details on customizing installation locations, etc.).
+isapi_wsgi.py will be installed in the 'site-packages' directory of your Python installation. (Unless directed elsewhere; see the "Installing Python Modules" section of the Python manuals for details on customizing installation locations, etc.).
 
 (Note: for the Win32 installer release, just run the .exe file.)
 
