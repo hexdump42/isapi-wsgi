@@ -18,6 +18,7 @@ python setup.py install
 isapi_wsgi.py will be installed in the 'site-packages' directory of your Python installation. (Unless directed elsewhere; see the "Installing Python Modules" section of the Python manuals for details on customizing installation locations, etc.).
 
 (Note: for the Win32 installer release, just run the .exe file.)
+
 ==Limitations==
 
     * Single threaded 
@@ -45,14 +46,17 @@ http://localhost/isapi-wsgi-test/test
     * qwip_test.py - run quixote.demo as a WSGI app using QWIP. 
 
 Also it is worthwhile reading the docs that come with the win32 isapi extension.
+
 ==Debugging==
 
 A simple trace function is provided that will allow viewing of print statements using win32traceutil if the isapi_wsgi trace global is set to 1.
+
 ==To Do==
 
 Write fully threaded version
 
 Add better error logging support
+
 ==Credits==
 
 Peter Hunt for initial code review and support.
