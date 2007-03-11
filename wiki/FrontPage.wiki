@@ -8,6 +8,4 @@ Description: An implementation of WSGI (PEP 333) for running as a ISAPI extensio
 
 Current status: I am happy with the functionality of the single threaded version of the handler. You can checkout directly from subversion (svn checkout https://isapi-wsgi.googlecode.com/svn/trunk/). It has been used to run some WSGI enabled apps and adaptors.
 
-Mailing list: http://groups.google.com/group/isapi_wsgi-dev
-
-Maintainer: Mark Rees EMail: mark dot john dot rees at gmail dot com Blog: http://hex-dump.blogspot.com
+ISAPISimpleHandlerDocs
