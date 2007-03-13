@@ -1,4 +1,5 @@
 #summary ISAPI_WSGI ISAPISimpleHandler Docs
+#labels Featured
 
 =ISAPI_WSGI ISAPISimpleHandler=
 
