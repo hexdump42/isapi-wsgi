@@ -1,4 +1,4 @@
-= ISAPI_WSGI ISAPISimpleHandler Beta =
+= ISAPI_WSGI Handler 0.3 Beta =
 
 
 == Dependencies ==
@@ -20,10 +20,6 @@ Modules" section of the Python manuals for details on customizing
 installation locations, etc.).
 
 (Note: for the Win32 installer release, just run the .exe file.)
-
-== Limitations ==
-
- * Single threaded
 
 == Usage ==
 
@@ -55,11 +51,13 @@ A simple trace function is provided that will allow viewing of print statements 
 
 == To Do ==
 
-Write fully threaded version
+Better documentation
 
-Add better error logging support
+Some unit tests
 
 == Credits ==
+
+Chris Lambacher for patches that removed limitations of my initial efforts.
 
 Peter Hunt for initial code review and support.
 
