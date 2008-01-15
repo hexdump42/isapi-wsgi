@@ -3,6 +3,8 @@
 
 =ISAPI_WSGI ISAPISimpleHandler=
 
+This document relates the the first version of the isapi_wsgi handler released in 2006. It can be obtained by checkout from the subversion repository (svn checkout )
+
 ==Dependencies==
 
     * Python 2.2+
