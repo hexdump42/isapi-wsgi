@@ -202,36 +202,45 @@ class IsapiWsgiHandler(BaseHandler):
 
         self.environ.update(environ)
 
+def _run_app(rootapp, apps, ecb):
+    sn = fixScriptname(ecb.GetServerVariable('SCRIPT_NAME'))
+    wsgi_appname = sn.split("/")[-1]
+    application = apps.get(wsgi_appname, rootapp)
+
+    handler = IsapiWsgiHandler(ecb)
+    trace("Handler")
+    try:
+        if application is not None:
+            handler.run(application)        
+        else:
+            handler.run(isapi_error)        
+    except ExtensionError:
+        # error normally happens when client disconnects before 
+        # extension i/o completed
+        pass
+    except:
+        # ToDo:Other exceptions should generate a nice page
+        trace("Caught App Exception")
+        pass
+
     
 # The ISAPI extension - handles requests in our virtual dir, and sends the
 # response to the client.
 class ISAPISimpleHandler(SimpleExtension):
     '''Python Simple WSGI ISAPI Extension'''
-    def __init__(self, app):
+    def __init__(self, rootapp=None, **apps):
         trace("ISAPISimpleHandler.__init__")
-        self.app = app
+        self.rootapp = rootapp
+        self.apps = apps
 
         SimpleExtension.__init__(self)
 
     def HttpExtensionProc(self, ecb):
         trace("Enter HttpExtensionProc")
-        application = self.app
-        handler = IsapiWsgiHandler(ecb)
-        trace("Handler")
-        try:
-            if application is not None:
-                handler.run(application)        
-            else:
-                handler.run(isapi_error)        
-        except ExtensionError:
-            # error normally happens when client disconnects before 
-            # extension i/o completed
-            pass
-        except:
-            # ToDo:Other exceptions should generate a nice page
-            trace("Caught Exception")
-            pass
+
+        _run_app(self.rootapp, self.apps, ecb)
         ecb.close()
+        
         trace("Exit HttpExtensionProc")
         return isapicon.HSE_STATUS_SUCCESS
 
@@ -240,28 +249,16 @@ class ISAPISimpleHandler(SimpleExtension):
 
 class ISAPIThreadPoolHandler(ThreadPoolExtension):
     '''Python Thread Pool WSGI ISAPI Extension'''
-    def __init__(self, app):
+    def __init__(self, rootapp=None, **apps):
         trace("ISAPIThreadPoolHandler.__init__")
-        self.app = app
+        self.rootapp = rootapp
+        self.apps = apps
 
         ThreadPoolExtension.__init__(self)
 
     def Dispatch(self, ecb):
         trace("Enter Dispatch")
-        application = self.app
-        handler = IsapiWsgiHandler(ecb)
-        try:
-            if application is not None:
-                handler.run(application)        
-            else:
-                handler.run(isapi_error)        
-        except ExtensionError:
-            # error normally happens when client disconnects before 
-            # extension i/o completed
-            pass
-        except:
-            # ToDo:Other exceptions should generate a nice page
-            pass
+        _run_app(self.rootapp, self.apps, ecb)
         ecb.DoneWithSession()
         trace("Exit Dispatch")
 
