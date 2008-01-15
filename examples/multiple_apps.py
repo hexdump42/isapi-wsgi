@@ -1,12 +1,14 @@
 __doc__ = '''
 An example of how isapi_wsgi can be configured to run multiple apps from
-a single extension.
+a single extension. Also set one of the apps to serve from root.
 
  To launch this application from a web browser use a url similar to:
 
   http://localhost/isapi-wsgi-multiple-apps/simple_app
   http://localhost/isapi-wsgi-multiple-apps/demo
   http://localhost/isapi-wsgi-multiple-apps/echo
+
+  http://localhost/isapi-wsgi-multiple-apps/  will serve the echo app
 '''
 import isapi_wsgi
 
@@ -27,7 +29,7 @@ def __ExtensionFactory__():
         except ImportError:
             raise AssertionError("Problems importing module %s." % res['module'])
 
-    return isapi_wsgi.ISAPISimpleHandler(**apps)
+    return isapi_wsgi.ISAPISimpleHandler(rootapp=apps['echo'], **apps)
 
 
 
