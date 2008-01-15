@@ -10,7 +10,7 @@
 #
 # To launch this application from a web browser use a url similar to:
 #
-#  http://localhost/isapi-wsgi-demo/demo
+#  http://localhost/isapi-wsgi-demo/
 #
 # A "Hello world!" and the WSGI environment should be displayed.
 
@@ -29,7 +29,7 @@ def demo_app(environ,start_response):
 import isapi_wsgi
 # The entry points for the ISAPI extension.
 def __ExtensionFactory__():
-    return isapi_wsgi.ISAPISimpleHandler(demo = demo_app)
+    return isapi_wsgi.ISAPISimpleHandler(demo_app)
 
 if __name__=='__main__':
     # If run from the command-line, install ourselves.
