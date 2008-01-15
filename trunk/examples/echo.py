@@ -10,7 +10,7 @@
 #
 # To launch this application from a web browser use a url similar to:
 #
-#  http://localhost/isapi-wsgi-echo/echo
+#  http://localhost/isapi-wsgi-echo/
 #
 
 r"""\
@@ -76,7 +76,7 @@ class BadIter(object):
 import isapi_wsgi
 # The entry points for the ISAPI extension.
 def __ExtensionFactory__():
-    return isapi_wsgi.ISAPISimpleHandler(echo = application)
+    return isapi_wsgi.ISAPISimpleHandler(application)
 
 if __name__=='__main__':
     # If run from the command-line, install ourselves.
