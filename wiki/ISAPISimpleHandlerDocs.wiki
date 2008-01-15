@@ -7,7 +7,7 @@
 
     * Python 2.2+
     * Python win32 extensions that include the isapi package
-    * wsgiref library from http://cvs.eby-sarna.com/wsgiref/
+    * wsgiref library from http://cvs.eby-sarna.com/wsgiref/ (included in Python 2.5+)
     * A windows webserver that supports ISAPI (isapi_wsgi to-date has only been tested on IIS 5.1) 
 
 ==Installation==
