@@ -1,7 +1,12 @@
 """
 $Id: isapi_wsgi.py 7 2005-02-08 02:40:30Z Mark $
 
-This is a beta ISAPI extension for queued wsgi handler.
+This is a beta ISAPI extension for a wsgi with 2 handlers classes.
+
+    - ISAPISimpleHandler which creates a new IsapiWsgiHandler object for
+      each request.
+    - ISAPIThreadPoolHandler where the wsgi requests are run on worker threads
+      from the thread pool.
 
 Dependecies:
     - python 2.2+
@@ -10,24 +15,27 @@ Dependecies:
 
 Based on isapi/test/extension_simple.py, PEP 333 etc
 
-TODO:
-    - sendfile
 """
 __author__ = "Mark Rees <mark.john.rees@gmail.com>"
+__release__ = "0.3"
 __version__ = "$Rev: 7 $ $LastChangedDate: 2005-02-08 13:40:30 +1100 (Tue, 08Feb 2005) $"
-__url__ = "isapi-wsgi.python-hosting.com"
-__description__ = "ISAPI WSGI SimpleHandler"
+__url__ = "http://isapi-wsgi.googlecode.com"
+__description__ = "ISAPI WSGI Handler"
 __license__ = "MIT"
-from isapi import isapicon
+
+#this is first so that we can see import errors
+import sys
+if hasattr(sys, "isapidllhandle"):
+    import win32traceutil
+
+from isapi import isapicon, ExtensionError
 from isapi.simple import SimpleExtension
+from isapi.threaded_extension import ThreadPoolExtension
 from wsgiref.handlers import BaseHandler
 import sys, os, stat, string
-import threading
 try: from cStringIO import StringIO
 except ImportError: from StringIO import StringIO
 
-if hasattr(sys, "isapidllhandle"):
-    import win32traceutil
 
 traceon = 0
 def trace(*msgs):
@@ -56,8 +64,6 @@ def fixScriptname(scriptname):
     scriptname = "/".join(scriptname.split("/",3)[0:3])
 
     return scriptname
-
-import win32event, win32file, winerror, win32con
 
 class ISAPIInputWrapper:
     # Based on ModPythonInputWrapper in mp_wsgi_handler.py
@@ -113,56 +119,18 @@ class ISAPIErrorWrapper:
     def flush(self):
         pass
 
-# The ISAPI extension - handles requests in our virtual dir, and sends the
-# response to the client.
-class ISAPISimpleHandler(SimpleExtension, BaseHandler):
-    '''Python Simple WSGI ISAPI Extension'''
-    def __init__(self, **apps):
-        trace("ISAPISimpleHandler.__init__")
-        self.apps = apps
-        self.ecb = None
-        self.stdin = None
-        self.stdout = None
-        self.stderr = ISAPIErrorWrapper()
-        self.base_env = []
-        self.wsgi_multithread = False
-        self.wsgi_multiprocess = False
-        self.lock = threading.Lock()
-
-    def HttpExtensionProc(self, ecb):
-        trace("Enter HttpExtensionProc")
-        self.lock.acquire() 
+class IsapiWsgiHandler(BaseHandler):
+    def __init__(self, ecb):
         self.ecb = ecb
         self.stdin = ISAPIInputWrapper(self.ecb)
         self.stdout = ISAPIOutputWrapper(self.ecb)
+        self.stderr = sys.stderr #this will go to the win32traceutil
         self.headers = None
         self.headers_sent = False
-        url = ecb.GetServerVariable("URL")
-        if url[-1] == "/":
-            url = url[:-1]
-        sn = fixScriptname(ecb.GetServerVariable('SCRIPT_NAME'))
-        wsgi_appname = sn.split("/")[-1]
-        application = self.apps.get(wsgi_appname, None)
-        try:
-            if application is not None:
-                self.run(application)        
-            else:
-                self.run(isapi_error)        
-        except ExtensionError:
-            # error normally happens when client disconnects before 
-            # extension i/o completed
-            pass
-        except:
-            # ToDo:Other exceptions should generate a nice page
-            pass
-        self.ecb.close()
-        self.lock.release()
-        trace("Exit HttpExtensionProc")
-        return isapicon.HSE_STATUS_SUCCESS
+        self.wsgi_multithread = False
+        self.wsgi_multiprocess = False
+        self.base_env = []
 
-    def TerminateExtension(self, status):
-        trace("TerminateExtension")
-    
     def send_preamble(self):
         """Since ISAPI sends preamble itself, do nothing"""
         trace("send_preamble")
@@ -234,6 +202,71 @@ class ISAPISimpleHandler(SimpleExtension, BaseHandler):
 
         self.environ.update(environ)
 
+    
+# The ISAPI extension - handles requests in our virtual dir, and sends the
+# response to the client.
+class ISAPISimpleHandler(SimpleExtension):
+    '''Python Simple WSGI ISAPI Extension'''
+    def __init__(self, app):
+        trace("ISAPISimpleHandler.__init__")
+        self.app = app
+
+        SimpleExtension.__init__(self)
+
+    def HttpExtensionProc(self, ecb):
+        trace("Enter HttpExtensionProc")
+        application = self.app
+        handler = IsapiWsgiHandler(ecb)
+        trace("Handler")
+        try:
+            if application is not None:
+                handler.run(application)        
+            else:
+                handler.run(isapi_error)        
+        except ExtensionError:
+            # error normally happens when client disconnects before 
+            # extension i/o completed
+            pass
+        except:
+            # ToDo:Other exceptions should generate a nice page
+            trace("Caught Exception")
+            pass
+        ecb.close()
+        trace("Exit HttpExtensionProc")
+        return isapicon.HSE_STATUS_SUCCESS
+
+    def TerminateExtension(self, status):
+        trace("TerminateExtension")
+
+class ISAPIThreadPoolHandler(ThreadPoolExtension):
+    '''Python Thread Pool WSGI ISAPI Extension'''
+    def __init__(self, app):
+        trace("ISAPIThreadPoolHandler.__init__")
+        self.app = app
+
+        ThreadPoolExtension.__init__(self)
+
+    def Dispatch(self, ecb):
+        trace("Enter Dispatch")
+        application = self.app
+        handler = IsapiWsgiHandler(ecb)
+        try:
+            if application is not None:
+                handler.run(application)        
+            else:
+                handler.run(isapi_error)        
+        except ExtensionError:
+            # error normally happens when client disconnects before 
+            # extension i/o completed
+            pass
+        except:
+            # ToDo:Other exceptions should generate a nice page
+            pass
+        ecb.DoneWithSession()
+        trace("Exit Dispatch")
+
+    
+
 def isapi_error(environ, start_response):
     '''Send a nice error page to the client'''
     status = '404 OK'
@@ -250,7 +283,7 @@ def test(environ, start_response):
 
 # The entry points for the ISAPI extension.
 def __ExtensionFactory__():
-    return ISAPISimpleHandler(test = test)
+    return ISAPISimpleHandler(test)
 
 
 
