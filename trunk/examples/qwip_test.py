@@ -14,7 +14,7 @@
 #
 # To launch this application from a web browser use a url similar to:
 #
-#  http://localhost/isapi-wsgi-qwip-test/demo
+#  http://localhost/isapi-wsgi-qwip-test/
 #
 
 import isapi_wsgi
@@ -22,7 +22,7 @@ import qwip
 
 # The entry points for the ISAPI extension.
 def __ExtensionFactory__():
-    return isapi_wsgi.ISAPISimpleHandler(demo = qwip.QWIP('quixote.demo'))
+    return isapi_wsgi.ISAPISimpleHandler(qwip.QWIP('quixote.demo'))
 
 if __name__=='__main__':
     # If run from the command-line, install ourselves.
