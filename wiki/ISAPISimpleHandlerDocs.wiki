@@ -1,7 +1,7 @@
-#summary ISAPI_WSGI ISAPISimpleHandler Docs
+#summary ISAPI_WSGI ISAPISimpleHandler 0.2 Docs
 #labels Featured
 
-=ISAPI_WSGI ISAPISimpleHandler=
+=ISAPI_WSGI ISAPISimpleHandler 0.2=
 
 This document relates the the first version of the isapi_wsgi handler released in 2006. It can be obtained by checkout from the subversion repository (svn checkout http://isapi-wsgi.googlecode.com/svn/tags/isapi_wsgi-0.2/).
 
