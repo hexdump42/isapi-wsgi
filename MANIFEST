@@ -7,5 +7,6 @@ tests\isapi_wsgi_echotest.py
 examples\__init__.py
 examples\simple.py
 examples\demo.py
+examples\demo_use_threadpool.py
 examples\echo.py
 examples\multiple_apps.py
