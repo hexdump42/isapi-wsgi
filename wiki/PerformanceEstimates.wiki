@@ -36,11 +36,18 @@ The result of the test gave an adjusted figure of 10 requests/sec. So using the 
 
 Note that the CGI test involves spawning a separate python interpreter process to run the CGI script. 
 
+
+===Test Of ASP.NET===
+
+An ASP.NET file using ASP classic style and VB as it's code language was used to generate the HMTL Hello World.
+
+The result of the test gave an adjusted figure of 670 requests/sec. 
+
 ===Summary of Results===
 
 || *Mechanism* || *Requests/sec* ||
 || wsgi_cgi  || 10   ||
 || isapi_wsgi (ISAPISimpleHandler)|| 167 ||
 || isapi_wsgi (ISAPIThreadPoolHandler) || 170 ||
-|| ASP || 637 ||
+|| ASP.NET (Classic ASP) || 637 ||
 || static    || 1000 ||
