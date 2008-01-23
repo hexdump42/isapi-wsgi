@@ -1,3 +1,13 @@
 #summary Performance estimates for isapi_wsgi
 
 As Graham Dumpleton, the author of [http://www.modwsgi.org mod_wsgi] [http://code.google.com/p/modwsgi/wiki/PerformanceEstimates points out] "Providing benchmarks comparing one system to another is always dangerous, especially when they use different technologies. This is because the performance can be dependent on how the system is setup or tested and what the hardware configuration and operating system used is."
+
+Drawing inspiration from Grahams benchmarking of mod_wsgi, a normalised figure of 1000 requests/sec for serving up static files through IIS is used as a baseline reference, with the different means of supporting a Python applications through IIS expressed relative to that value. 
+
+The actual figures given here were derived from testing with Microsoft IIS 6.0 running on a Windows Server 2003 R2 SP1 and the Microsoft Web Application Stress Tool (WAST). IIS is configured as a standard installation. WAST was configured to run with 50 concurrent requests for the duration of 1 minute. The benchmarks were run multiple times, and the published figures have been averaged and rounded to give as described what is more an estimate of the relative performance to the other mechanisms for running python code under IIS, than a definitive indicator of performance for the specific mechanism.
+
+In all cases, the particular WSGI application which was used for testing was as follows:
+
+{{{
+
+}}} 
