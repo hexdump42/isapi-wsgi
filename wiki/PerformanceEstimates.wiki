@@ -14,9 +14,9 @@ def app(environ, start_response):
     '''Simple app as per PEP 333'''
     status = '200 OK'
     output = '''<html><header>
-            <title>Benchmark Page</title>'
-            </header><body>'
-            <p>Hello world</p>'
+            <title>Benchmark Page</title>
+            </header><body>
+            <p>Hello world</p>
             </body></html>'''
     start_response(status, [('Content-type', 'text/html')])
     return [output]
