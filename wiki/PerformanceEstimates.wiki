@@ -4,10 +4,19 @@ As Graham Dumpleton, the author of [http://www.modwsgi.org mod_wsgi] [http://cod
 
 Drawing inspiration from Grahams benchmarking of mod_wsgi, a normalised figure of 1000 requests/sec for serving up static files through IIS is used as a baseline reference, with the different means of supporting a Python applications through IIS expressed relative to that value. 
 
-The actual figures given here were derived from testing with Microsoft IIS 6.0 running on a Windows Server 2003 R2 SP1 and the Microsoft Web Application Stress Tool (WAST). IIS is configured as a standard installation. WAST was configured to run with 50 concurrent requests for the duration of 1 minute. The benchmarks were run multiple times, and the published figures have been averaged and rounded to give as described what is more an estimate of the relative performance to the other mechanisms for running python code under IIS, than a definitive indicator of performance for the specific mechanism.
+The actual figures given here were derived from testing with Microsoft IIS 6.0 running on a Windows Server 2003 R2 SP1 and the Microsoft Web Application Stress Tool [http://support.microsoft.com/kb/231282 (WAST)]. IIS is configured as a standard installation. WAST was configured to run with 50 concurrent requests for the duration of 1 minute. The benchmarks were run multiple times, and the published figures have been averaged and rounded to give as described what is more an estimate of the relative performance to the other mechanisms for running python code under IIS, than a definitive indicator of performance for the specific mechanism.
 
 In all cases, the particular WSGI application which was used for testing was as follows:
 
 {{{
-
+def app(environ, start_response):
+    '''Simple app as per PEP 333'''
+    status = '200 OK'
+    output = '''<html><header>
+            <title>Benchmark Page</title>'
+            </header><body>'
+            <p>Hello world</p>'
+            </body></html>'''
+    start_response(status, [('Content-type', 'text/html')])
+    return [output]
 }}} 
