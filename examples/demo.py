@@ -1,4 +1,6 @@
-# An example of how to publish a simple wsgi app under isapi_wsgi
+# An example of how to publish a simple wsgi app under isapi_wsgi using
+# the ISAPISimpleHandler which will create a new instance for each incoming
+# request.
 #
 # Executing this script (or any server config script) will install the extension
 # into your web server and will create a "loader" DLL _demo.dll in the 
@@ -43,7 +45,7 @@ if __name__=='__main__':
         ScriptMapParams(Extension="*", Flags=0)
     ]
     vd = VirtualDirParameters(Name="isapi-wsgi-demo",
-                              Description = "ISAPI-WSGI Demo",
+                              Description = "ISAPI-WSGI ISAPISimpleHandler Demo",
                               ScriptMaps = sm,
                               ScriptMapUpdate = "replace"
                               )
