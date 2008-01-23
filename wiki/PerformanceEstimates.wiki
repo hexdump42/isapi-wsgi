@@ -9,6 +9,7 @@ The actual figures given here were derived from testing with Microsoft IIS 6.0 r
 In all cases, the particular WSGI application which was used for testing was as follows:
 
 {{{
+
 def app(environ, start_response):
     '''Simple app as per PEP 333'''
     status = '200 OK'
@@ -19,4 +20,14 @@ def app(environ, start_response):
             </body></html>'''
     start_response(status, [('Content-type', 'text/html')])
     return [output]
+
 }}} 
+
+===Summary of Results===
+
+|| *Mechanism* || *Requests/sec* ||
+|| wsgi_cgi  || 10   ||
+|| isapi_wsgi (ISAPISimpleHandler)|| 167 ||
+|| isapi_wsgi (ISAPIThreadPoolHandler) || 170 ||
+|| ASP || 637 ||
+|| static    || 1000 ||
