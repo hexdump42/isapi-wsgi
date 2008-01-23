@@ -8,4 +8,4 @@ Description: An implementation of WSGI (PEP 333) for running as a ISAPI extensio
 
 Current status: The isapi_wsgi handler has been modified to overcome the limitations of the single threaded version of the handler. You can checkout the new version from the trunk (svn checkout http://isapi-wsgi.googlecode.com/svn/trunk/). The documentation needs to be updated for the changes but the examples in the trunk show how to use it. 
 
-ISAPISimpleHandlerDocs
+[ISAPISimpleHandlerDocs ISAPISimpleHandlerDocs]
