@@ -1,0 +1,51 @@
+#summary ISAPI_WSGI 0.3 Installation Notes
+#labels Featured
+
+=ISAPI_WSGI 0.3=
+
+This document relates the the first version of the isapi_wsgi handler released in 2006. It can be obtained by checkout from the subversion repository (svn checkout http://isapi-wsgi.googlecode.com/svn/tags/isapi_wsgi-0.2/).
+
+==Dependencies==
+
+    * Python 2.3+
+    * Python win32 extensions that include the isapi package
+    * wsgiref library from http://cvs.eby-sarna.com/wsgiref/ (included in Python 2.5+)
+    * A windows webserver that supports ISAPI (isapi_wsgi has been tested on IIS 5.1 and 6.0) 
+
+==Installation==
+
+Python 2.3 or better is required. 
+
+Download the archive or windows installer from [http://code.google.com/p/isapi-wsgi/downloads/list here]
+
+
+To install the archive, just unpack it, go to the directory containing 'setup.py', and run:
+
+python setup.py install
+
+isapi_wsgi.py will be installed in the 'site-packages' directory of your Python installation. (Unless directed elsewhere; see the "Installing Python Modules" section of the Python manuals for details on customizing installation locations, etc.).
+
+(Note: for the Win32 installer release, just run the .exe file.)
+
+==Testing==
+
+Run the command:
+
+{{{
+python isapi_wsgi.py install
+}}}
+
+to create a simple ISAPI test extension in an IIS virtual directory called isapi-wsgi-test. This can be accessed from a webbrowser using the url:
+
+http://localhost/isapi-wsgi-test/
+
+If there are no errors and a simple web page is displayed, then the installation of isap_wsgi was successful.
+
+To remove the test virtual directory, run the command:
+
+{{{
+python isapi_wsgi.py remove
+}}}
+
+
+
