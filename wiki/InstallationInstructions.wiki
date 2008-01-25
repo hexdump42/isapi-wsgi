@@ -29,7 +29,7 @@ isapi_wsgi.py will be installed in the 'site-packages' directory of your Python 
 
 ==Testing==
 
-Run the command:
+As a user with admin privileges run the command:
 
 {{{
 python isapi_wsgi.py install
@@ -46,4 +46,3 @@ To remove the test virtual directory, run the command:
 {{{
 python isapi_wsgi.py remove
 }}}
-
