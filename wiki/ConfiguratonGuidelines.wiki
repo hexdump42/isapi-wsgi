@@ -1,0 +1,15 @@
+#summary Basic configuration guide for isapi_wsgi.
+#labels Phase-Deploy
+
+==Configuration Guidelines==
+
+The purpose of this document is to detail the basic configuration steps required for running WSGI applications with isapi_wsgi. 
+
+This document assumes that you have already installed the isapi_wsgi module. If you haven't completed this step, then consult the following document:
+
+  * InstallationInstructions
+
+For further examples on configuring isapi_wsi, please refer to the guides for integrating isapi_wsgi with some of the more commonly used Python web frameworks and applications:
+
+  * [http://wiki.pylonshq.com/display/pylonscookbook/Serving+a+Pylons+app+with+IIS Serving a Pylons app with IIS]
+
