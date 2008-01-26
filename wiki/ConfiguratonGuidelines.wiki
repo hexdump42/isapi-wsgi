@@ -1,5 +1,5 @@
 #summary Basic configuration guide for isapi_wsgi.
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 ==Configuration Guidelines==
 
@@ -12,4 +12,3 @@ This document assumes that you have already installed the isapi_wsgi module. If 
 For further examples on configuring isapi_wsi, please refer to the guides for integrating isapi_wsgi with some of the more commonly used Python web frameworks and applications:
 
   * [http://wiki.pylonshq.com/display/pylonscookbook/Serving+a+Pylons+app+with+IIS Serving a Pylons app with IIS]
-
