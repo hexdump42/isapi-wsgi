@@ -12,3 +12,7 @@ This document assumes that you have already installed the isapi_wsgi module. If 
 For further examples on configuring isapi_wsi, please refer to the guides for integrating isapi_wsgi with some of the more commonly used Python web frameworks and applications:
 
   * [http://wiki.pylonshq.com/display/pylonscookbook/Serving+a+Pylons+app+with+IIS Serving a Pylons app with IIS]
+
+Also the examples that come with the isapi_wsgi distribution may be helpful:
+
+  * [http://isapi-wsgi.googlecode.com/svn/trunk/examples/ isapi_wsgi examples]
