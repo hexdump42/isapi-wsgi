@@ -38,8 +38,14 @@ if __name__=='__main__':
     HandleCommandLine(params)
 }}}
 
-The directory added to sys.path would be the directory containing the package for the Django site created by running: 
+The directories added to sys.path will be both the directories containing the package and the Django site created by running: 
 
 {{{
 django-admin.py startproject mysite
+}}}
+
+The script (in this example called django_wsgi.py) is installed as an ISAPI application by running:
+
+{{{
+python django_wsgi.py install
 }}}
