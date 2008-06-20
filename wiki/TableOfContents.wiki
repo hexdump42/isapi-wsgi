@@ -5,4 +5,4 @@
 Add your content here.
 
   * [Installation InstallationInstructions]
-  * [Credits Credits and Thanks]
+  * [CreditsAndThanks Credits and Thanks]
