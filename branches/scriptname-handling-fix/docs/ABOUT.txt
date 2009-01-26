@@ -1,0 +1,13 @@
+Project Name:ISAPI WSGI
+
+License: [wiki:MiTLicense MIT]
+
+Description: An implementation of WSGI (PEP 333) for running as a ISAPI extension under IIS. WSGI is considered as important standard for the future of web deployed Python code. There are [wiki:WsgiImplemetations implementations] for CGI, mod_python, twisted, jython etc but to my knowledge not one using ISAPI for IIS. The goal of this project is to provide one. It is dependant on Mark Hammond's Python win32 isapi extension.
+
+Current status: I am happy with the functionality of the single threaded version of the handler. Beta release can be downloaded [wiki:ISAPISimpleHandler-0.4-beta here] but suggest you checkout directly from subversion (svn co http://svn.isapi-wsgi.python-hosting.com/trunk) as a couple of bugs have been fixed since beta distribution was created. Currently working on a fully threaded version. It has been used to run some [wiki:isapi-wsgi-has-run WSGI enabled apps and adaptors].
+
+This site also hosts an implementation of WSGI for running as an ASP.NET handler. It is dependant on IronPython 1.0 Beta 9 or better. You can check it out directly from subversion (http://svn.isapi-wsgi.python-hosting.com/sandbox/mark/ironpy-wsgi/).
+
+Mailing list: http://groups.google.com/group/isapi_wsgi-dev
+
+Maintainer: Mark Rees EMail: mark dot john dot rees at gmail dot com Blog: http://hex-dump.blogspot.com
