@@ -45,20 +45,170 @@ def trace(*msgs):
     for msg in msgs:
         print msg
 
-def getISAPIExtensionPath(ecb):
-    """Returns the path to our extension DLL.
+class ECBDictAdapter(object):
+    """
+    Adapt ECB to a read-only dictionary interface
+    
+    >>> from fakeecb import FakeECB
+    >>> ecb = FakeECB()
+    >>> ecb_dict = ECBDictAdapter(ecb)
+    >>> ecb_dict['SCRIPT_NAME']
+    '/'
+    >>> ecb_dict['PATH_INFO']
+    '/'
+    """
+    def __init__(self, ecb):
+        self.ecb = ecb
+    
+    def __getitem__(self, key):
+        try:
+            return self.ecb.GetServerVariable(key)
+        except:
+            raise KeyError, key
 
-    This will generally be either '/' or '/foo', where 'foo'
-    is the name of the virtual directory created at install time.
-    ISAPI doesn't support 'nested' virtual directories, so it is
-    unlikely you will ever see more than one path component.
+def path_references_application(path, apps):
+    """
+    Return true if the first element in the path matches any string
+    in the apps list.
+    
+    >>> path_references_application('/foo/bar', ['foo','baz'])
+    True
+    
+    """
+    # assume separator is /
+    nodes = filter(None, path.split('/'))
+    return nodes and nodes[0] in apps
+
+def interpretPathInfo(ecb_server_vars, app_names=[]):
+    """
+    Based on the a dictionary of ECB server variables and list of valid
+    subapplication names, determine the correct PATH_INFO, SCRIPT_NAME,
+    and IIS_EXTENSION_PATH.
+    
+    By valid, I mean SCRIPT_NAME + PATH_INFO is always the request path and
+    SCRIPT_NAME is the path to the WSGi application and PATH_INFO is the path
+    that the WSGI application expects to handle.
+    
+    In IIS, the path to the extension sometimes varies from the script name,
+    particularly when the script map extenison is not '*'.  IIS_EXTENSION_PATH
+    is set to the path that leads to the extension.
+    
+    Return these values as a dict.
+    
+    For the following doctests, I use a convention:
+     vappname : the IIS application
+     appname : the wsgi application (may be )
+     subappX : a wsgi sub application (must always follow appname)
+     proc : a method within the WSGI app (something that should appear in PATH_INFO)
+    
+    --------------------------
+    First some common examples
+    
+    Following is an example case where the extension is installed at the root
+     of the site, the requested
+     URL is /proc
+    >>> ecb_vars = dict(SCRIPT_NAME='/proc', PATH_INFO='/proc', APPL_MD_PATH='/LM/W3SVC/1/ROOT')
+    >>> interpretPathInfo(ecb_vars) == dict(SCRIPT_NAME='', PATH_INFO='/proc', IIS_EXTENSION_PATH='')
+    True
+
+    An example where the extension is installed to a virtual directory below
+     the root.
+     URL is /vappname/proc
+    >>> ecb_vars = dict(SCRIPT_NAME='/vappname/proc', PATH_INFO='/vappname/proc', APPL_MD_PATH='/LM/W3SVC/1/ROOT/vappname')
+    >>> interpretPathInfo(ecb_vars) == dict(SCRIPT_NAME='/vappname', PATH_INFO='/proc', IIS_EXTENSION_PATH='/vappname')
+    True
+    
+    An example where the extension is installed to a virtual directory below
+     the root, and some subapps are present
+    >>> subapps = ('subapp1', 'subapp2')
+    
+     URL is /vappname/proc
+    >>> ecb_vars = dict(SCRIPT_NAME='/vappname/proc', PATH_INFO='/vappname/proc', APPL_MD_PATH='/LM/W3SVC/1/ROOT/vappname')
+    >>> interpretPathInfo(ecb_vars, subapps) == dict(SCRIPT_NAME='/vappname', PATH_INFO='/proc', IIS_EXTENSION_PATH='/vappname')
+    True
+    
+     URL is /vappname/subapp1/proc
+    >>> ecb_vars = dict(SCRIPT_NAME='/vappname/subapp1/proc', PATH_INFO='/vappname/subapp1/proc', APPL_MD_PATH='/LM/W3SVC/1/ROOT/vappname')
+    >>> interpretPathInfo(ecb_vars, subapps) == dict(SCRIPT_NAME='/vappname/subapp1', PATH_INFO='/proc', IIS_EXTENSION_PATH='/vappname', WSGI_SUBAPP='subapp1')
+    True
+    
+    ------------------------------
+    Now some less common scenarios
+    
+    An example where the extension is installed only to the .wsgi extension to
+     a virtual directory below the root.
+     URL is /vappname/any.wsgi/proc
+    >>> ecb_vars = dict(SCRIPT_NAME='/vappname/any.wsgi', PATH_INFO='/vappname/any.wsgi/proc', APPL_MD_PATH='/LM/W3SVC/1/ROOT/vappname')
+    >>> interpretPathInfo(ecb_vars) == dict(SCRIPT_NAME='/vappname/any.wsgi', PATH_INFO='/proc', IIS_EXTENSION_PATH='/vappname')
+    True
+
+    An example where the extension is installed only to the .wsgi extension at
+     the root.
+     URL is /any_path/any.wsgi/proc
+    >>> ecb_vars = dict(SCRIPT_NAME='/any_path/any.wsgi', PATH_INFO='/any_path/any.wsgi/proc', APPL_MD_PATH='/LM/W3SVC/1/ROOT')
+    >>> interpretPathInfo(ecb_vars) == dict(SCRIPT_NAME='/any_path/any.wsgi', PATH_INFO='/proc', IIS_EXTENSION_PATH='')
+    True
+    
+    How about an extension installed at the root to the .wsgi extension with
+     subapps
+     URL is /any_path/any.wsgi/subapp1/proc/foo
+    >>> ecb_vars = dict(SCRIPT_NAME='/any_path/any.wsgi', PATH_INFO='/any_path/any.wsgi/subapp1/proc/foo', APPL_MD_PATH='/LM/W3SVC/1/ROOT')
+    >>> interpretPathInfo(ecb_vars, subapps) == dict(SCRIPT_NAME='/any_path/any.wsgi/subapp1', PATH_INFO='/proc/foo', IIS_EXTENSION_PATH='', WSGI_SUBAPP='subapp1')
+    True
+    
+    How about an extension installed at the root to the .wsgi extension with
+     subapps... this time default to the root app.
+     URL is /any_path/any.wsgi/proc/foo
+    >>> ecb_vars = dict(SCRIPT_NAME='/any_path/any.wsgi', PATH_INFO='/any_path/any.wsgi/proc/foo', APPL_MD_PATH='/LM/W3SVC/1/ROOT')
+    >>> interpretPathInfo(ecb_vars, subapps) == dict(SCRIPT_NAME='/any_path/any.wsgi', PATH_INFO='/proc/foo', IIS_EXTENSION_PATH='')
+    True
+    
+    """
+    
+    PATH_INFO = ecb_server_vars['PATH_INFO']
+    SCRIPT_NAME = ecb_server_vars['SCRIPT_NAME']
+    IIS_EXTENSION_PATH = getISAPIExtensionPath(ecb_server_vars)
+    
+    if SCRIPT_NAME == PATH_INFO:
+        # since they're the same, we're in a * mapped extension; use
+        # the application path
+        SCRIPT_NAME = IIS_EXTENSION_PATH
+
+    # remove the script name from the path info
+    if SCRIPT_NAME and PATH_INFO.startswith(SCRIPT_NAME):
+        _, PATH_INFO = PATH_INFO.split(SCRIPT_NAME, 1)
+
+    result = dict(
+        SCRIPT_NAME=SCRIPT_NAME,
+        PATH_INFO=PATH_INFO,
+        IIS_EXTENSION_PATH=IIS_EXTENSION_PATH,
+        )
+    
+    # finally, adjust the result if the path info begins with a subapp
+    if path_references_application(PATH_INFO, app_names):
+        result.update(WSGI_SUBAPP = shift_path_info(result))
+
+    return result
+
+def getISAPIExtensionPath(ecb_server_vars):
+    """Returns the path to our extension DLL.
+    
+    This will be blank ('') if installed at the root, or something like
+    '/foo' or '/bar/foo' if 'foo' is the name of the virtual directory
+    where this extension is installed.
+    
+    >>> getISAPIExtensionPath(dict(APPL_MD_PATH='/LM/W3SVC/1/ROOT/test'))
+    '/test'
+    
+    >>> getISAPIExtensionPath(dict(APPL_MD_PATH='/LM/W3SVC/1/ROOT'))
+    ''
     """
     # Only way I see how to do this is to fetch the location of our ISAPI 
     # extension in the metabase then assume that '/ROOT/' is the root!
     # It will be something like MD='/LM/W3SVC/1/ROOT/test'
-    appl_md_path = ecb.GetServerVariable("APPL_MD_PATH")
-    pos = appl_md_path.split("/ROOT", 1)[1]
-    return pos or '/'
+    appl_md_path = ecb_server_vars["APPL_MD_PATH"]
+    site, pos = appl_md_path.split("/ROOT", 1)
+    return pos
 
 class ISAPIInputWrapper:
     # Based on ModPythonInputWrapper in mp_wsgi_handler.py
@@ -115,8 +265,9 @@ class ISAPIErrorWrapper:
         pass
 
 class IsapiWsgiHandler(BaseHandler):
-    def __init__(self, ecb):
+    def __init__(self, ecb, path_info):
         self.ecb = ecb
+        self.path_info = path_info
         self.stdin = ISAPIInputWrapper(self.ecb)
         self.stdout = ISAPIOutputWrapper(self.ecb)
         self.stderr = sys.stderr #this will go to the win32traceutil
@@ -171,16 +322,7 @@ class IsapiWsgiHandler(BaseHandler):
             except:
                 raise AssertionError("missing CGI environment variable %s" % cgivar)
 
-        # IIS sets *both* PATH_INFO and SCRIPT_NAME to be the full path
-        # portion of the URL - including the path to our virtual directory, 
-        # if any.  So we adjust this to what wsgi wants, which is to simply
-        # 'shift' the PATH_INFO to account for our virtual directory name, if 
-        # any.
-        environ['SCRIPT_NAME'] = ''
-        loc = getISAPIExtensionPath(self.ecb)
-        # This assume our location can only have 1 path component.
-        if loc != '/':
-            shift_path_info(environ)
+        environ.update(self.path_info)
 
         http_cgienv_vars = self.ecb.GetServerVariable('ALL_HTTP').split("\n")
         for cgivar in http_cgienv_vars:
@@ -203,11 +345,15 @@ class IsapiWsgiHandler(BaseHandler):
         self.environ.update(environ)
 
 def _run_app(rootapp, apps, ecb):
-    loc = getISAPIExtensionPath(ecb)
-    wsgi_appname = "ISAPI WSGI application at %s" % loc
-    application = apps.get(wsgi_appname, rootapp)
+    ecb_dict = ECBDictAdapter(ecb)
+    path_info = interpretPathInfo(ecb_dict, apps.keys())
+    loc = path_info.get('WSGI_SUBAPP')
+    application = apps.get(loc, rootapp)
 
-    handler = IsapiWsgiHandler(ecb)
+    # we have to pass path_info because otherwise the handler can't determine
+    #  what the correct path is (because it doesn't know whether it's a
+    #  subapp or not)
+    handler = IsapiWsgiHandler(ecb, path_info)
     trace("Handler")
     try:
         if application is not None:
