@@ -32,6 +32,7 @@ from isapi import isapicon, ExtensionError
 from isapi.simple import SimpleExtension
 from isapi.threaded_extension import ThreadPoolExtension
 from wsgiref.handlers import BaseHandler
+from wsgiref.util import shift_path_info
 import sys, os, stat, string
 try: from cStringIO import StringIO
 except ImportError: from StringIO import StringIO
@@ -44,26 +45,20 @@ def trace(*msgs):
     for msg in msgs:
         print msg
 
-def fixPathinfo(scriptname, pathinfo):
-    """Fix IIS PATH_NAME bug."""
+def getISAPIExtensionPath(ecb):
+    """Returns the path to our extension DLL.
 
-    if string.find(pathinfo, scriptname) == 0:
-        pathinfo = pathinfo[len(scriptname):]                
-    
-    return pathinfo
-
-def fixScriptname(scriptname):
-    '''Fix scriptname as described below.
-    IIS evaluates SCRIPT_NAME as the path between scheme://host:port and
-    the query string. For this wsgi implementation it is assumed that the
-    SCRIPT_NAME should the IIS virtual directory and the app name.
-    For example: /isapi_wsgi/demo
-    '''
-    if scriptname[-1] == "/":
-        scriptname = scriptname[:-1]
-    scriptname = "/".join(scriptname.split("/",3)[0:3])
-
-    return scriptname
+    This will generally be either '/' or '/foo', where 'foo'
+    is the name of the virtual directory created at install time.
+    ISAPI doesn't support 'nested' virtual directories, so it is
+    unlikely you will ever see more than one path component.
+    """
+    # Only way I see how to do this is to fetch the location of our ISAPI 
+    # extension in the metabase then assume that '/ROOT/' is the root!
+    # It will be something like MD='/LM/W3SVC/1/ROOT/test'
+    appl_md_path = ecb.GetServerVariable("APPL_MD_PATH")
+    pos = appl_md_path.split("/ROOT", 1)[1]
+    return pos or '/'
 
 class ISAPIInputWrapper:
     # Based on ModPythonInputWrapper in mp_wsgi_handler.py
@@ -176,14 +171,16 @@ class IsapiWsgiHandler(BaseHandler):
             except:
                 raise AssertionError("missing CGI environment variable %s" % cgivar)
 
-        # Due to an IIS bug ISAPI returns incorrect PATH_INFO and SCRIPT_NAME 
-        # variables. Both variables are the extension name and the rest of 
-        # the path upto the ?
-        # Code below corrects the variables.
-        pathinfo = environ['PATH_INFO']
-        scriptname = fixScriptname(environ['SCRIPT_NAME'])
-        environ['SCRIPT_NAME'] = scriptname
-        environ['PATH_INFO'] = fixPathinfo(scriptname, pathinfo)
+        # IIS sets *both* PATH_INFO and SCRIPT_NAME to be the full path
+        # portion of the URL - including the path to our virtual directory, 
+        # if any.  So we adjust this to what wsgi wants, which is to simply
+        # 'shift' the PATH_INFO to account for our virtual directory name, if 
+        # any.
+        environ['SCRIPT_NAME'] = ''
+        loc = getISAPIExtensionPath(self.ecb)
+        # This assume our location can only have 1 path component.
+        if loc != '/':
+            shift_path_info(environ)
 
         http_cgienv_vars = self.ecb.GetServerVariable('ALL_HTTP').split("\n")
         for cgivar in http_cgienv_vars:
@@ -200,11 +197,14 @@ class IsapiWsgiHandler(BaseHandler):
         except:
             pass
 
+        # and some custom ones.
+        environ['isapi.ecb'] = self.ecb
+
         self.environ.update(environ)
 
 def _run_app(rootapp, apps, ecb):
-    sn = fixScriptname(ecb.GetServerVariable('SCRIPT_NAME'))
-    wsgi_appname = sn.split("/")[-1]
+    loc = getISAPIExtensionPath(ecb)
+    wsgi_appname = "ISAPI WSGI application at %s" % loc
     application = apps.get(wsgi_appname, rootapp)
 
     handler = IsapiWsgiHandler(ecb)
