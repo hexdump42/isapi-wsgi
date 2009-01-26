@@ -28,6 +28,7 @@ import sys
 if hasattr(sys, "isapidllhandle"):
     import win32traceutil
 
+import re
 from isapi import isapicon, ExtensionError
 from isapi.simple import SimpleExtension
 from isapi.threaded_extension import ThreadPoolExtension
@@ -43,27 +44,6 @@ def trace(*msgs):
     if not traceon: return
     for msg in msgs:
         print msg
-
-def fixPathinfo(scriptname, pathinfo):
-    """Fix IIS PATH_NAME bug."""
-
-    if string.find(pathinfo, scriptname) == 0:
-        pathinfo = pathinfo[len(scriptname):]                
-    
-    return pathinfo
-
-def fixScriptname(scriptname):
-    '''Fix scriptname as described below.
-    IIS evaluates SCRIPT_NAME as the path between scheme://host:port and
-    the query string. For this wsgi implementation it is assumed that the
-    SCRIPT_NAME should the IIS virtual directory and the app name.
-    For example: /isapi_wsgi/demo
-    '''
-    if scriptname[-1] == "/":
-        scriptname = scriptname[:-1]
-    scriptname = "/".join(scriptname.split("/",3)[0:3])
-
-    return scriptname
 
 class ISAPIInputWrapper:
     # Based on ModPythonInputWrapper in mp_wsgi_handler.py
@@ -119,7 +99,97 @@ class ISAPIErrorWrapper:
     def flush(self):
         pass
 
+def NullEnvironmentAdapter(environ):
+	pass
+
+class ScriptDepthEnvironmentAdapter(object):
+    """
+    Adapt the environment variables (in particular the SCRIPT_NAME
+    and PATH_INFO vars) to correct for ISAPI behavior and deployment
+    choices.
+    
+    >>> sample_env = dict(PATH_INFO='/foo/bar/baz', SCRIPT_NAME='/foo/bar/baz')
+    >>> depth_2_env = sample_env.copy()
+    >>> ScriptDepthEnvironmentAdapter()(depth_2_env)
+    >>> depth_2_env['SCRIPT_NAME'], depth_2_env['PATH_INFO']
+    ('/foo/bar', '/baz')
+    >>> depth_1_env = sample_env.copy()
+    >>> ScriptDepthEnvironmentAdapter(1)(depth_1_env)
+    >>> depth_1_env['SCRIPT_NAME'], depth_1_env['PATH_INFO']
+    ('/foo', '/bar/baz')
+    """
+    
+    def __init__(self, script_depth=2):
+        self.script_depth = script_depth
+    
+    def __call__(self, environ):
+        """
+        Due to an IIS bug, ISAPI returns incorrect PATH_INFO and SCRIPT_NAME 
+        variables. Both variables include the full path up to the query string.
+        This method is a workaround for that issue.
+        
+        This method assumes the first two segments of the path are part of the
+        script and the rest is part of the path.
+        
+        Set the property 'script_depth' on this object to another number to
+        specify a different depth.
+        """
+        path_info = environ['PATH_INFO']
+        script_name = environ['SCRIPT_NAME']
+
+        # first, we make the assumption that pathinfo and scriptname are the same.
+        # Test that assumption.
+        assert path_info == script_name, "Unexpected values for PATH_INFO/SCRIPT_NAME"
+
+        # user_script_depth describes the number of names in the path; for compatibilty,
+        #  default to 2.
+        # e.g. /extension_dir/app -> script_depth==2
+        #      /app               -> script_depth == 1
+        #      /                  -> script_depth==0
+        user_script_depth = getattr(self, 'script_depth')
+        paths = path_info.split('/')
+        split_index = user_script_depth + 1
+        script_name = '/'.join(paths[:split_index])
+        # path should always begin with a slash
+        path_info = '/'.join([''] + paths[split_index:])
+        
+        environ['SCRIPT_NAME'] = script_name
+        environ['PATH_INFO'] = path_info
+
+class RegexEnvironmentAdapter(object):
+    """
+    Use a regex pattern to determine the script name
+    
+    >>> sample_env = dict(PATH_INFO='/foo/bar/baz', SCRIPT_NAME='/foo/bar/baz')
+    >>> regex_env = sample_env.copy()
+    >>> RegexEnvironmentAdapter('.*?bar')(regex_env)
+    >>> regex_env['SCRIPT_NAME'], regex_env['PATH_INFO']
+    ('/foo/bar', '/baz')
+    >>> regex_env['SCRIPT_NAME'] = regex_env['PATH_INFO'] = '/anything_goes_here/and%20here/bar/baz'
+    >>> RegexEnvironmentAdapter('.*?bar')(regex_env)
+    >>> regex_env['SCRIPT_NAME'], regex_env['PATH_INFO']
+    ('/anything_goes_here/and%20here/bar', '/baz')
+    """
+    def __init__(self, script_pattern):
+        self.script_pattern = script_pattern
+    
+    def __call__(self, environ):
+        match = re.match(self.script_pattern, environ['SCRIPT_NAME'])
+        if not match:
+            return # or raise an error?
+        environ['SCRIPT_NAME'], environ['PATH_INFO'] = match.group(0), environ['SCRIPT_NAME'][match.end():]
+
+class SubappEnvironmentAdapter(RegexEnvironmentAdapter):
+    def __init__(self, app_names):
+        app_names_pattern = '|'.join(app_names)
+        pattern = '/[^/]+/(%s)' % app_names_pattern
+        RegexEnvironmentAdapter.__init__(self, pattern)
+
 class IsapiWsgiHandler(BaseHandler):
+    """
+    Handler
+    """
+    
     def __init__(self, ecb):
         self.ecb = ecb
         self.stdin = ISAPIInputWrapper(self.ecb)
@@ -176,14 +246,7 @@ class IsapiWsgiHandler(BaseHandler):
             except:
                 raise AssertionError("missing CGI environment variable %s" % cgivar)
 
-        # Due to an IIS bug ISAPI returns incorrect PATH_INFO and SCRIPT_NAME 
-        # variables. Both variables are the extension name and the rest of 
-        # the path upto the ?
-        # Code below corrects the variables.
-        pathinfo = environ['PATH_INFO']
-        scriptname = fixScriptname(environ['SCRIPT_NAME'])
-        environ['SCRIPT_NAME'] = scriptname
-        environ['PATH_INFO'] = fixPathinfo(scriptname, pathinfo)
+        self.environment_adapter(environ)
 
         http_cgienv_vars = self.ecb.GetServerVariable('ALL_HTTP').split("\n")
         for cgivar in http_cgienv_vars:
@@ -202,31 +265,48 @@ class IsapiWsgiHandler(BaseHandler):
 
         self.environ.update(environ)
 
-def _run_app(rootapp, apps, ecb):
-    sn = fixScriptname(ecb.GetServerVariable('SCRIPT_NAME'))
-    wsgi_appname = sn.split("/")[-1]
-    application = apps.get(wsgi_appname, rootapp)
+class ISAPIHandler(object):
+    """Handler"""
+    
+    """
+    environment_adapter should be a callable that accepts the environment
+    and mutates it as appropriate.
+    """
+    environment_adapter = ScriptDepthEnvironmentAdapter()
+    
+    def _run_app(self, ecb):
+        application = self._select_application(ecb)
 
-    handler = IsapiWsgiHandler(ecb)
-    trace("Handler")
-    try:
-        if application is not None:
-            handler.run(application)        
-        else:
-            handler.run(isapi_error)        
-    except ExtensionError:
-        # error normally happens when client disconnects before 
-        # extension i/o completed
-        pass
-    except:
-        # ToDo:Other exceptions should generate a nice page
-        trace("Caught App Exception")
-        pass
+        handler = IsapiWsgiHandler(ecb)
+        handler.environment_adapter = self.environment_adapter
+        trace("Handler")
+        try:
+            if application is not None:
+                handler.run(application)        
+            else:
+                handler.run(isapi_error)        
+        except ExtensionError:
+            # error normally happens when client disconnects before 
+            # extension i/o completed
+            pass
+        except:
+            # ToDo:Other exceptions should generate a nice page
+            trace("Caught App Exception")
+            pass
+
+    def _select_application(self, ecb):
+        "Determine the application based on the SCRIPT_INFO/PATH_INFO"
+        partial_env = dict([(param, ecb.GetServerVariable(param)) for param in ('SCRIPT_NAME', 'PATH_INFO')])
+        self.environment_adapter(partial_env)
+        sn = partial_env['SCRIPT_NAME']
+        wsgi_appname = sn.split("/")[-1]
+        application = self.apps.get(wsgi_appname, self.rootapp)
+        return application
 
     
 # The ISAPI extension - handles requests in our virtual dir, and sends the
 # response to the client.
-class ISAPISimpleHandler(SimpleExtension):
+class ISAPISimpleHandler(SimpleExtension, ISAPIHandler):
     '''Python Simple WSGI ISAPI Extension'''
     def __init__(self, rootapp=None, **apps):
         trace("ISAPISimpleHandler.__init__")
@@ -238,7 +318,7 @@ class ISAPISimpleHandler(SimpleExtension):
     def HttpExtensionProc(self, ecb):
         trace("Enter HttpExtensionProc")
 
-        _run_app(self.rootapp, self.apps, ecb)
+        self._run_app(ecb)
         ecb.close()
         
         trace("Exit HttpExtensionProc")
@@ -247,7 +327,7 @@ class ISAPISimpleHandler(SimpleExtension):
     def TerminateExtension(self, status):
         trace("TerminateExtension")
 
-class ISAPIThreadPoolHandler(ThreadPoolExtension):
+class ISAPIThreadPoolHandler(ThreadPoolExtension, ISAPIHandler):
     '''Python Thread Pool WSGI ISAPI Extension'''
     def __init__(self, rootapp=None, **apps):
         trace("ISAPIThreadPoolHandler.__init__")
@@ -258,7 +338,7 @@ class ISAPIThreadPoolHandler(ThreadPoolExtension):
 
     def Dispatch(self, ecb):
         trace("Enter Dispatch")
-        _run_app(self.rootapp, self.apps, ecb)
+        self._run_app(ecb)
         ecb.DoneWithSession()
         trace("Exit Dispatch")
 
