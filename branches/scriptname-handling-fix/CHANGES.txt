@@ -5,6 +5,10 @@ Apply Chris Lambacher's first set of patches:
 - ISAPIThreadPoolHandler where the wsgi requests are run on worker threads from the thread pool.
 - App now serves from VirtualDirectory root by default. 
 
+Improved virtual directory support:
+- Application can now be deployed to any level of the IIS directory structure including the root.
+- SCRIPT_NAME is now set properly (to the app root if it's a *-mapped script handler)
+
 0.2 First beta release 
 
 Added qwip_test.py as an example for running quixote apps via QWIP.
