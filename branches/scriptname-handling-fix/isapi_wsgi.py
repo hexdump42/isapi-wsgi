@@ -59,12 +59,36 @@ class ECBDictAdapter(object):
     """
     def __init__(self, ecb):
         self.ecb = ecb
-    
+        if sys.version_info > (3,0):
+            if ecb.Version >= 0x00060000:
+                # we can handle UNICODE_* variables.
+                self._get_variable = self._get_variable_py3k
+            else:
+                self._get_variable = self._get_variable_py3k_iis5
+        else:
+            self._get_variable = self._get_variable_py2k
+
     def __getitem__(self, key):
         try:
-            return self.ecb.GetServerVariable(key)
-        except:
+            return self._get_variable(key)
+        except ExtensionError:
             raise KeyError, key
+
+    # a few helpers specific to the IIS and python version.
+    def _get_variable(self, key):
+        raise RuntimeError("not reached: replaced at runtime in the ctor")
+
+    def _get_variable_py3k_iis5(self, key):
+        # IIS5 doesn't support UNICODE_* variable names...
+        return self.ecb.GetServerVariable(key).decode('latin-1')
+
+    def _get_variable_py3k(self, key):
+        # IIS6 and later on py3k - ask IIS for the unicode version.
+        return self.ecb.GetServerVariable('UNICODE_' + key)
+
+    def _get_variable_py2k(self, key):
+        # py2k - just use normal string objects.
+        return self.ecb.GetServerVariable(key)
 
 def path_references_application(path, apps):
     """
@@ -316,15 +340,16 @@ class IsapiWsgiHandler(BaseHandler):
                                 'SERVER_NAME', 'SERVER_PORT',
                                 'SERVER_PROTOCOL'
                                 ]
+        ecb_dict = ECBDictAdapter(self.ecb)
         for cgivar in required_cgienv_vars:
             try:
-                environ[cgivar] = self.ecb.GetServerVariable(cgivar)
-            except:
+                environ[cgivar] = ecb_dict[cgivar]
+            except KeyError:
                 raise AssertionError("missing CGI environment variable %s" % cgivar)
 
         environ.update(self.path_info)
 
-        http_cgienv_vars = self.ecb.GetServerVariable('ALL_HTTP').split("\n")
+        http_cgienv_vars = ecb_dict['ALL_HTTP'].split("\n")
         for cgivar in http_cgienv_vars:
             pair = cgivar.split(":",1)
             try:
@@ -335,8 +360,8 @@ class IsapiWsgiHandler(BaseHandler):
         
         # Other useful CGI variables
         try:
-            environ['REMOTE_USER'] = self.ecb.GetServerVariable('REMOTE_USER')
-        except:
+            environ['REMOTE_USER'] = ecb_dict['REMOTE_USER']
+        except KeyError:
             pass
 
         # and some custom ones.
