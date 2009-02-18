@@ -23,7 +23,7 @@ except SyntaxError:
     # for Python 2.5 and earlier, simulate the print function
     import sys
     def _print(*args, **kwargs):
-		file = kwargs.get('file', sys.stdout)
+        file = kwargs.get('file', sys.stdout)
         print >> file, ' '.join(args)
 
 def demo_app(environ,start_response):
