@@ -23,7 +23,7 @@ def demo_app(environ,start_response):
     yield cr("Hello world!")
     yield cr()
     for item in sorted(environ.items()):
-        yield cr('='.join(item))
+        yield cr(' = '.join(item))
 
 import isapi_wsgi
 # The entry points for the ISAPI extension.
