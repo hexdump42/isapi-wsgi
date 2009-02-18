@@ -16,30 +16,14 @@
 #
 # A "Hello world!" and the WSGI environment should be displayed.
 
-try:
-    from __future__ import print_function
-    _print = print
-except SyntaxError:
-    # for Python 2.5 and earlier, simulate the print function
-    import sys
-    def _print(*args, **kwargs):
-        file = kwargs.get('file', sys.stdout)
-        print >> file, ' '.join(args)
-
 def demo_app(environ,start_response):
     """Demo app from wsgiref"""
-    try:
-        from io import StringIO
-    except ImportError:
-        from StringIO import StringIO
-    stdout = StringIO()
-    _print("Hello world!", file=stdout)
-    _print(file=stdout)
-    h = sorted(environ.items())
-    for k,v in h:
-        _print(k,'=',repr(v), file=stdout)
-    start_response("200 OK", [('Content-Type','text/plain')])
-    return [stdout.getvalue()]
+    start_response("200 OK", [('Content-Type', 'text/plain')])
+    cr = lambda s='': s + '\n'
+    yield cr("Hello world!")
+    yield cr()
+    for item in sorted(environ.items()):
+        yield cr('='.join(item))
 
 import isapi_wsgi
 # The entry points for the ISAPI extension.
