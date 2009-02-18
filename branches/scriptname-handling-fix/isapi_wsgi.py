@@ -43,7 +43,7 @@ def trace(*msgs):
     """Write trace message(s) so win32traceutil can display them"""
     if not traceon: return
     for msg in msgs:
-        print msg
+        print(msg)
 
 class ECBDictAdapter(object):
     """

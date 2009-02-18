@@ -13,7 +13,7 @@ class EchoTest(unittest.TestCase):
 
     def url(self):
         if not os.environ.get('ECHO_URL'):
-            print 'You must set $ECHO_URL'
+            print('You must set $ECHO_URL')
             sys.exit(1)
         url = URL(os.environ['ECHO_URL'])
         return url
