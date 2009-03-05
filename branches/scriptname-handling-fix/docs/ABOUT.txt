@@ -1,13 +1,63 @@
-Project Name:ISAPI WSGI
+==========
+ISAPI WSGI
+==========
 
-License: [wiki:MiTLicense MIT]
+License
+=======
 
-Description: An implementation of WSGI (PEP 333) for running as a ISAPI extension under IIS. WSGI is considered as important standard for the future of web deployed Python code. There are [wiki:WsgiImplemetations implementations] for CGI, mod_python, twisted, jython etc but to my knowledge not one using ISAPI for IIS. The goal of this project is to provide one. It is dependant on Mark Hammond's Python win32 isapi extension.
+ISAPI WSGI is licenced under the `MIT License
+<http://www.opensource.org/licenses/mit-license.php>`_.
 
-Current status: I am happy with the functionality of the single threaded version of the handler. Beta release can be downloaded [wiki:ISAPISimpleHandler-0.4-beta here] but suggest you checkout directly from subversion (svn co http://svn.isapi-wsgi.python-hosting.com/trunk) as a couple of bugs have been fixed since beta distribution was created. Currently working on a fully threaded version. It has been used to run some [wiki:isapi-wsgi-has-run WSGI enabled apps and adaptors].
+Description
+===========
 
-This site also hosts an implementation of WSGI for running as an ASP.NET handler. It is dependant on IronPython 1.0 Beta 9 or better. You can check it out directly from subversion (http://svn.isapi-wsgi.python-hosting.com/sandbox/mark/ironpy-wsgi/).
+ISAPI WSGI is an implementation of WSGI (PEP 333) for running as an
+ISAPI extension under IIS. WSGI is considered as important standard
+for the future of web deployed Python code. There are implementations
+for CGI, mod_python, twisted, jython, etc.  This is the leading
+implementation for IIS/ISAPI. 
 
-Mailing list: http://groups.google.com/group/isapi_wsgi-dev
+Dependencies
+============
 
-Maintainer: Mark Rees EMail: mark dot john dot rees at gmail dot com Blog: http://hex-dump.blogspot.com
+ISAPI WSGI is currently dependent on Mark Hammond's Python win32
+isapi extension, available in the
+`Python for Windows Extensions project
+<http://sourceforge.net/projects/pywin32>`_.
+
+Status
+======
+
+Thanks to contributions from the communitity, there are two
+implementations.  One is single-threaded; the other is multi-threaded.
+
+More details can be read on the `project page
+<http://google.code.com/p/isapi-wsgi>`_.
+
+Development
+===========
+
+Download the latest version from the `subversion repository
+<https://isapi-wsgi.googlecode.com/svn/trunk>`_.
+
+Mailing List
+============
+
+`A mailing list <http://groups.google.com/group/isapi_wsgi-dev>`_
+is maintained using google groups.
+
+Maintainer
+==========
+
+`Mark Rees <http://hex-dump.blogspot.com>`_ mark dot john dot rees at
+gmail dot com
+
+Changes
+=======
+
+0.3
+~~~
+
+- Improved path handling
+- Nested sub-application support
+- Python 3.0 support
