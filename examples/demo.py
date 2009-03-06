@@ -18,15 +18,12 @@
 
 def demo_app(environ,start_response):
     """Demo app from wsgiref"""
-    from StringIO import StringIO
-    stdout = StringIO()
-    print >>stdout, "Hello world!"
-    print >>stdout
-    h = environ.items(); h.sort()
-    for k,v in h:
-        print >>stdout, k,'=',`v`
-    start_response("200 OK", [('Content-Type','text/plain')])
-    return [stdout.getvalue()]
+    start_response("200 OK", [('Content-Type', 'text/plain')])
+    cr = lambda s='': s + '\n'
+    yield cr("Hello world!")
+    yield cr()
+    for item in sorted(environ.items()):
+        yield cr(' = '.join(item))
 
 import isapi_wsgi
 # The entry points for the ISAPI extension.
