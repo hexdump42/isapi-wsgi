@@ -34,11 +34,15 @@ implementations.  One is single-threaded; the other is multi-threaded.
 More details can be read on the `project page
 <http://google.code.com/p/isapi-wsgi>`_.
 
+Released versions are available from PyPI.  Just
+``easy_install isapi-wsgi``.
+
 Development
 ===========
 
 Download the latest version from the `subversion repository
-<https://isapi-wsgi.googlecode.com/svn/trunk>`_.
+<https://isapi-wsgi.googlecode.com/svn/trunk#egg=isapi-wsgi-dev>`_ or
+install it using ``easy_install isapi-wsgi-dev``.
 
 Mailing List
 ============
