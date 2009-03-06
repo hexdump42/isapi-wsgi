@@ -1,7 +1,9 @@
-#summary How to use Django with isapi_wsgi.
+#summary How to use Django or Pinax with isapi_wsgi.
 #labels Phase-Deploy
 
-Note: This has only been tested with Django 1.0.2 and isapi_wsgi.py R68 http://code.google.com/p/isapi-wsgi/source/detail?r=68 
+Note: This has only been tested with Django 1.0.2 and isapi_wsgi.py R68 
+
+==Django==
 
 The Django framework provides the django.core.handlers.wsgi.WSGIHandler() function for constructing a WSGI application corresonding to a Django application. Using this function, a script file for a Django application which will work with isapi_wsgi would be constructed as follows: 
 
@@ -49,3 +51,53 @@ The script (in this example called django_wsgi.py) is installed as an ISAPI appl
 {{{
 python django_wsgi.py install
 }}}
+
+==Pinax==
+
+Pinax is an integrated collection of Django applications that provides the most commonly needed social networking features. Since the collection of applications and their supporting python libraries are in a Pinax specific directory structure, a more complex script file is required. For example to run the Pinax basic project under isapi_wsgi, the following script is required:
+
+{{{
+import os, sys
+from os.path import abspath, dirname, join
+from site import addsitedir
+
+PINAX_ROOT = abspath(join(dirname(__file__), "../../../"))
+PROJECT_ROOT = abspath(join(dirname(__file__), "../"))
+
+path = addsitedir(join(PINAX_ROOT, "libs/external_libs"), set())
+if path:
+    sys.path = list(path) + sys.path
+
+sys.path.insert(0, join(PINAX_ROOT, "apps/external_apps"))
+sys.path.insert(0, join(PINAX_ROOT, "apps/local_apps"))
+sys.path.insert(0, join(PROJECT_ROOT, "apps"))
+
+sys.path.insert(0, abspath(join(dirname(__file__), "../../")))
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'basic_project.settings'
+import django.core.handlers.wsgi
+application = django.core.handlers.wsgi.WSGIHandler()
+import isapi_wsgi
+# The entry points for the ISAPI extension.
+def __ExtensionFactory__():
+    return isapi_wsgi.ISAPISimpleHandler(application)
+if __name__=='__main__':
+    # If run from the command-line, install ourselves.
+    from isapi.install import *
+    params = ISAPIParameters()
+    # Setup the virtual directories - this is a list of directories our
+    # extension uses - in this case only 1.
+    # Each extension has a "script map" - this is the mapping of ISAPI
+    # extensions.
+    sm = [
+        ScriptMapParams(Extension="*", Flags=0)
+        ]
+    vd = VirtualDirParameters(Name="pinax_basic",
+                              Description = "ISAPI-WSGI ISAPISimpleHandler Django Pinax basic project site",
+                              ScriptMaps = sm,
+                              ScriptMapUpdate = "replace"
+                              )
+    params.VirtualDirs = [vd]
+    HandleCommandLine(params)
+
+}}} 
