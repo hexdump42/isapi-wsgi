@@ -1,4 +1,8 @@
+Changes
+=======
+
 0.3 
+~~~
 
 Apply Chris Lambacher's first set of patches:
 - ISAPISImpleHandler creates handler object per request.
@@ -9,7 +13,10 @@ Improved virtual directory support:
 - Application can now be deployed to any level of the IIS directory structure including the root.
 - SCRIPT_NAME is now set properly (to the app root if it's a *-mapped script handler)
 
+Python 3.0 compatibility
+
 0.2 First beta release 
+~~~~~~~~~~~~~~~~~~~~~~
 
 Added qwip_test.py as an example for running quixote apps via QWIP.
 
@@ -22,6 +29,7 @@ Reset self.headers and self.headers_sent in HttpExtensionProc so wsgi states are
 correct if Extension Error occurred in previous call.
 
 0.1 
+~~~
 
 Change write method so it uses ecb.WriteClient rather than print redirection
 which was causing an Extension Error when running QWIP apps.

@@ -52,12 +52,3 @@ Maintainer
 `Mark Rees <http://hex-dump.blogspot.com>`_ mark dot john dot rees at
 gmail dot com
 
-Changes
-=======
-
-0.3
-~~~
-
-- Improved path handling
-- Nested sub-application support
-- Python 3.0 support

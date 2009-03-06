@@ -16,6 +16,8 @@ import os
 this_dir = os.path.dirname(__file__)
 doc_file = os.path.join(this_dir, 'docs', 'ABOUT.txt')
 long_description = open(doc_file).read()
+changes = os.path.join(this_dir, 'CHANGES.txt')
+long_description += open(changes).read()
 
 # PyPI will use rst2html from docutils to convert ABOUT.txt to HTML
 
