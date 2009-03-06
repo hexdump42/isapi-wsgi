@@ -1,7 +1,7 @@
 #summary How to use Django with isapi_wsgi.
 #labels Phase-Deploy
 
-Note: This has only been tested with 0.96 
+Note: This has only been tested with Django 1.0.2 and isapi_wsgi.py R68 http://code.google.com/p/isapi-wsgi/source/detail?r=68 
 
 The Django framework provides the django.core.handlers.wsgi.WSGIHandler() function for constructing a WSGI application corresonding to a Django application. Using this function, a script file for a Django application which will work with isapi_wsgi would be constructed as follows: 
 
