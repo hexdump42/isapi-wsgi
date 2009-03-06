@@ -13,7 +13,9 @@ Improved virtual directory support:
 - Application can now be deployed to any level of the IIS directory structure including the root.
 - SCRIPT_NAME is now set properly (to the app root if it's a *-mapped script handler)
 
-Python 3.0 compatibility
+Added Python 3.0 compatibility
+
+First release to PyPI
 
 0.2 First beta release 
 ~~~~~~~~~~~~~~~~~~~~~~
