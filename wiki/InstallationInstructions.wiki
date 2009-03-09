@@ -1,9 +1,9 @@
-#summary ISAPI_WSGI 0.3 Installation Notes
+#summary ISAPI_WSGI 0.4 Installation Notes
 #labels Featured
 
-=ISAPI_WSGI 0.3=
+=ISAPI_WSGI 0.=
 
-This document relates the current version of the isapi_wsgi handler released in January 2008. 
+This document relates the current version of the isapi_wsgi handler released in March 2009. 
 
 ==Dependencies==
 
