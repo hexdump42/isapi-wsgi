@@ -1,16 +1,18 @@
-= ISAPI_WSGI Handler 0.3 Beta =
+= ISAPI_WSGI Handler 0.4 =
 
 
 == Dependencies ==
 
- * Python 2.2+
+ * Python 2.3+
  * Python win32 extensions that include the isapi package
  * wsgiref library from http://cvs.eby-sarna.com/wsgiref/
- * A windows webserver that supports ISAPI (isapi_wsgi to-date has only been tested on IIS 5.1)
+ * A windows webserver that supports ISAPI
+    (isapi_wsgi to-date has been tested on IIS 5.1 & 6)
 
 == Installation ==
 
-Python 2.2 or better is required.  To install, just unpack the archive, go to the directory containing 'setup.py', and run::
+Python 2.3 better is required.  To install, just unpack the archive, go to the
+directory containing 'setup.py', and run::
 
 python setup.py install
 
@@ -29,25 +31,39 @@ Running the command:
 
 python isapi_wsgi.py 
 
-will create a simple ISAPI test extension that can be accessed from a webbrowser using the url:
+will create a simple ISAPI test extension that can be accessed from a
+webbrowser using the url:
 
 http://localhost/isapi-wsgi-test/test
 
 Examples
 
- * demo.py - app that displays a hello world and the wsgi environment.
+ * demo.py - app that displays a hello world and the wsgi environment using
+   ISAPISimpleHandler.
 
+ * demo_use_threadpool.py - app that displays a hello world and the wsgi
+   environment using ISAPIThreadPoolHandler.
+ 
  * echo.py - the test app from wsgi webkit. Used for isapi_wsgi unit tests.
 
  * multiple_apps.py - show how to support multiple wsgi apps from one isapi extension.
-
- * qwip_test.py - run quixote.demo as a WSGI app using QWIP.
 
 Also it is worthwhile reading the docs that come with the win32 isapi extension.
 
 == Debugging ==
 
-A simple trace function is provided that will allow viewing of print statements using win32traceutil if the isapi_wsgi traceon global is set to 1.
+A simple trace function is provided that will allow viewing of print statements
+using win32traceutil if the isapi_wsgi traceon global is set to 1.
+
+== Caveats ==
+
+If you make a change to your python code and things do not seem to work, try
+restarting IIS. Starting and stopping the website within MMC is not enough.
+I recommend the command line iisreset to stop and start IIS. This will clear
+the environment and cleanly reload any changes to your code.
+
+The extension dll must be run from a local drive. There may be issues if you
+run from a mapped drive.
 
 == To Do ==
 
@@ -58,6 +74,8 @@ Some unit tests
 == Credits ==
 
 Chris Lambacher for patches that removed limitations of my initial efforts.
+
+Jason Coombs for improved virtual directory support and initial Python 3k support.
 
 Peter Hunt for initial code review and support.
 
