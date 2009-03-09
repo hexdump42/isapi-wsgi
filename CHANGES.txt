@@ -5,8 +5,10 @@ Changes
 ~~~
 
 Improved virtual directory support:
-- Application can now be deployed to any level of the IIS directory structure including the root.
-- SCRIPT_NAME is now set properly (to the app root if it's a *-mapped script handler)
+
+Application can now be deployed to any level of the IIS directory structure including the root.
+ 
+SCRIPT_NAME is now set properly (to the app root if it's a `*`-mapped script handler)
 
 Added Python 3.0 compatibility
 
@@ -21,9 +23,12 @@ cgi.py now requires it.
 ~~~
 
 Apply Chris Lambacher's first set of patches:
-- ISAPISimpleHandler creates handler object per request.
-- ISAPIThreadPoolHandler where the wsgi requests are run on worker threads from the thread pool.
-- App now serves from VirtualDirectory root by default. 
+
+ISAPISimpleHandler creates handler object per request.
+ 
+ISAPIThreadPoolHandler where the wsgi requests are run on worker threads from the thread pool.
+ 
+App now serves from VirtualDirectory root by default. 
 
 0.2 First beta release 
 ~~~~~~~~~~~~~~~~~~~~~~
