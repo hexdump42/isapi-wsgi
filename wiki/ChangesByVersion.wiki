@@ -1,4 +1,5 @@
 #summary Changes by Version
+#labels Featured
 
 =Changes=
 
