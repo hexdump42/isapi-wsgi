@@ -1,5 +1,5 @@
 """
-$Id: isapi_wsgi.py 7 2005-02-08 02:40:30Z Mark $
+$Id$
 
 This is a beta ISAPI extension for a wsgi with 2 handlers classes.
 
@@ -18,7 +18,7 @@ Based on isapi/test/extension_simple.py, PEP 333 etc
 """
 __author__ = "Mark Rees <mark.john.rees@gmail.com>"
 __release__ = "0.3"
-__version__ = "$Rev: 7 $ $LastChangedDate: 2005-02-08 13:40:30 +1100 (Tue, 08Feb 2005) $"
+__version__ = "$Rev$ $LastChangedDate$"
 __url__ = "http://isapi-wsgi.googlecode.com"
 __description__ = "ISAPI WSGI Handler"
 __license__ = "MIT"
