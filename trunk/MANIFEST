@@ -1,5 +1,6 @@
 README.txt
 CHANGES.txt
+LICENSE.txt
 isapi_wsgi.py
 setup.py
 tests\__init__.py

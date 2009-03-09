@@ -1,0 +1,19 @@
+Building a Release
+==================
+
+  1. Update CHANGES.txt, README.txt and ABOUT.txt with release number and
+     check in.
+  
+  2. Update ChangesByVersion (http://code.google.com/p/isapi-wsgi/wiki/ChangesByVersion)
+     and if required the CreditsAndThanks (http://code.google.com/p/isapi-wsgi/wiki/CreditsAndThanks)
+     documents on Google code wiki.
+
+  3. Create a tag isapi_wsgi-N.N on the subversion repository where N.N is the
+     release number.
+     
+  4. Export from subversion using the release tag and create a distribution
+     using distutils::
+  
+       python setup.py sdist bdist_wininst
+     
+  5. Test the installers.

@@ -1,7 +1,7 @@
 """
 $Id$
 
-This is a beta ISAPI extension for a wsgi with 2 handlers classes.
+This is a ISAPI extension for a wsgi with 2 handlers classes.
 
     - ISAPISimpleHandler which creates a new IsapiWsgiHandler object for
       each request.
@@ -17,7 +17,7 @@ Based on isapi/test/extension_simple.py, PEP 333 etc
 
 """
 __author__ = "Mark Rees <mark.john.rees@gmail.com>"
-__release__ = "0.3"
+__release__ = "0.4"
 __version__ = "$Rev$ $LastChangedDate$"
 __url__ = "http://isapi-wsgi.googlecode.com"
 __description__ = "ISAPI WSGI Handler"

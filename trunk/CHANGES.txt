@@ -1,13 +1,8 @@
 Changes
 =======
 
-0.3 
+0.4
 ~~~
-
-Apply Chris Lambacher's first set of patches:
-- ISAPISImpleHandler creates handler object per request.
-- ISAPIThreadPoolHandler where the wsgi requests are run on worker threads from the thread pool.
-- App now serves from VirtualDirectory root by default. 
 
 Improved virtual directory support:
 - Application can now be deployed to any level of the IIS directory structure including the root.
@@ -16,6 +11,19 @@ Improved virtual directory support:
 Added Python 3.0 compatibility
 
 First release to PyPI
+
+Set IIS REMOTE_ADDR env variable as part of WSGI environment.
+
+Add optional size argument to wsgi.input's readline(). This is not part of WSGI spec, but stdlib
+cgi.py now requires it.
+
+0.3 
+~~~
+
+Apply Chris Lambacher's first set of patches:
+- ISAPISimpleHandler creates handler object per request.
+- ISAPIThreadPoolHandler where the wsgi requests are run on worker threads from the thread pool.
+- App now serves from VirtualDirectory root by default. 
 
 0.2 First beta release 
 ~~~~~~~~~~~~~~~~~~~~~~
