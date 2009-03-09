@@ -256,8 +256,8 @@ class ISAPIInputWrapper:
     def read(self, size=-1):
         return self._in.read(size)
     
-    def readline(self):
-        return self._in.readline()
+    def readline(self, size=-1):
+        return self._in.readline(size)
     
     def readlines(self, hint=-1):
         return self._in.readlines()
@@ -338,7 +338,7 @@ class IsapiWsgiHandler(BaseHandler):
                                 'PATH_INFO', 'QUERY_STRING',
                                 'CONTENT_TYPE', 'CONTENT_LENGTH',
                                 'SERVER_NAME', 'SERVER_PORT',
-                                'SERVER_PROTOCOL'
+                                'SERVER_PROTOCOL', 'REMOTE_ADDR'
                                 ]
         ecb_dict = ECBDictAdapter(self.ecb)
         for cgivar in required_cgienv_vars:
