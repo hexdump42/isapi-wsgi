@@ -62,4 +62,35 @@ if __name__=='__main__':
 
 ==Common Problems==
 
-Something to watch out if you are using SQLite as the backend database for your Django application. By default the Django app is running as the standard IIS user which has minimal privileges. This means that the Django app does not have permission to write to the SQLite database file. So your app will appear to work until a database write occurs and you will be presented with an internal server error. The solution is to configure the virtual directory anonymous access account to a user with greater permissions. This is done in the virtual directory Properties->Directory Security->Anonymous access and authentication control panel. 
+Something to watch out if you are using SQLite as the backend database for your Django application. By default the Django app is running as the standard IIS user which has minimal privileges. This means that the Django app does not have permission to write to the SQLite database file. So your app will appear to work until a database write occurs and you will be presented with an internal server error. The solution is to configure the virtual directory anonymous access account to a user with greater permissions. This can be done in the virtual directory Properties->Directory Security->Anonymous access and authentication control panel or you can do it as a post-install action in the script:
+
+{{{
+# Set virtual directory authentication post-install
+def set_vd_authentication(params, options, webdir=None):
+    if webdir is not None:
+        webdir.AuthAnonymous = True
+        # where Domain and userid are replaced with valid entries for your network
+        webdir.AnonymousUserName = "Domain\\userid"
+        webdir.AnonymousPasswordSync = True
+        webdir.SetInfo()
+        
+if __name__=='__main__':
+    # If run from the command-line, install ourselves.
+    from isapi.install import *
+    params = ISAPIParameters()
+    # Setup the virtual directories - this is a list of directories our
+    # extension uses - in this case only 1.
+    # Each extension has a "script map" - this is the mapping of ISAPI
+    # extensions.
+    sm = [
+        ScriptMapParams(Extension="*", Flags=0)
+        ]
+    vd = VirtualDirParameters(Name="pinax_basic",
+                              Description = "ISAPI-WSGI ISAPISimpleHandler Django Pinax basic project site",
+                              ScriptMaps = sm,
+                              ScriptMapUpdate = "replace",
+                              PostInstall = set_vd_authentication
+                              )
+    params.VirtualDirs = [vd]
+    HandleCommandLine(params)
+}}}
