@@ -36,5 +36,6 @@ setup(name='isapi_wsgi',
 	packages=['tests'],
 	cmdclass = {'build_py':build_py,
 	            'build_scripts':build_scripts,
-	           }
+	           },
+	zip_safe=False,
 	)

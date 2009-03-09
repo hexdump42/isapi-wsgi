@@ -14,6 +14,8 @@ Building a Release
   4. Export from subversion using the release tag and create a distribution
      using distutils::
   
-       python setup.py sdist bdist_wininst
+       python setup.py egg_info -RDb "" sdist bdist_wininst bdist_egg
      
   5. Test the installers.
+  
+  6. Upload to Google Code site.
