@@ -4,10 +4,10 @@
 
 Documentation for isapi_wsgi 4.0.
 
-  * [InstallationInstructions]
+  * [InstallationInstructions Installation]
   * Configuration
-    * [IntegrationWithDjango]
-    * [IntegrationWithTG]
-    * [ServingAPylonsAppWithIIS]
-  * [ChangesByVersion]
-  * [CreditsAndThanks]
+    * [IntegrationWithDjango Integration with Django]
+    * [IntegrationWithTG Integration with TG]
+    * [ServingAPylonsAppWithIIS Integration with Pylons]
+  * [ChangesByVersion Changes By Version]
+  * [CreditsAndThanks Credits & Thanks]
