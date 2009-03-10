@@ -2,10 +2,11 @@
 
 = Introduction =
 
-Documentation for isapi_wsgi 3.0.
+Documentation for isapi_wsgi 4.0.
 
   * [InstallationInstructions Installation]
   * Configuration
     * [IntegrationWithDjango Integration with Django]
     * [http://wiki.pylonshq.com/display/pylonscookbook/Serving+a+Pylons+app+with+IIS Serving a Pylons app with IIS]
+  * [ChangesByVersion Changes by Version]
   * [CreditsAndThanks Credits and Thanks]
