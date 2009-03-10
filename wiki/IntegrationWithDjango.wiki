@@ -9,6 +9,55 @@ The Django framework provides the django.core.handlers.wsgi.WSGIHandler() functi
 
 {{{
 import os, sys
+sys.path.append('C:\\sw\\django')
+sys.path.append('C:\\sw\\django\\mysite')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+import django.core.handlers.wsgi
+application = django.core.handlers.wsgi.WSGIHandler()
+
+import isapi_wsgi
+# The entry points for the ISAPI extension.
+def __ExtensionFactory__():
+    return isapi_wsgi.ISAPISimpleHandler(application)
+
+if __name__=='__main__':
+    # If run from the command-line, install ourselves.
+    from isapi.install import *
+    params = ISAPIParameters()
+    # Setup the virtual directories - this is a list of directories our
+    # extension uses - in this case only 1.
+    # Each extension has a "script map" - this is the mapping of ISAPI
+    # extensions.
+    sm = [
+        ScriptMapParams(Extension="*", Flags=0)
+    ]
+    vd = VirtualDirParameters(Name="mysite",
+                              Description = "ISAPI-WSGI ISAPISimpleHandler Django mysite",
+                              ScriptMaps = sm,
+                              ScriptMapUpdate = "replace"
+                              )
+    params.VirtualDirs = [vd]
+    HandleCommandLine(params)
+}}}
+
+The directories added to sys.path will be both the directories containing the package and the Django site created by running: 
+
+{{{
+django-admin.py startproject mysite
+}}}
+
+The script (in this example called django_wsgi.py) is installed as an ISAPI application by running:
+
+{{{
+python django_wsgi.py install
+}}}
+
+==Pinax==
+
+Pinax is an integrated collection of Django applications that provides the most commonly needed social networking features. Since the collection of applications and their supporting python libraries are in a Pinax specific directory structure, a more complex script file is required. For example to run the Pinax basic project under isapi_wsgi, the following script is required:
+
+{{{
+import os, sys
 from os.path import abspath, dirname, join
 from site import addsitedir
 
