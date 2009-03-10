@@ -111,7 +111,7 @@ if __name__=='__main__':
 
 ==Common Problems==
 
-Something to watch out if you are using SQLite as the backend database for your Django application. By default the Django app is running as the standard IIS user which has minimal privileges. This means that the Django app does not have permission to write to the SQLite database file. So your app will appear to work until a database write occurs and you will be presented with an internal server error. The solution is to configure the virtual directory anonymous access account to a user with greater permissions. This can be done in the virtual directory Properties->Directory Security->Anonymous access and authentication control panel or you can do it as a post-install action in the script:
+Something to watch out if you are using SQLite as the backend database for your Django application. In your Django settings.py, the DATABASE_NAME value must be the full path to the SQLite database file. Also by default the Django app is running as the standard IIS user which has minimal privileges. This means that the Django app does not have permission to write to the SQLite database file. So your app will appear to work until a database write occurs and you will be presented with an internal server error. The solution is to configure the virtual directory anonymous access account to a user with greater permissions. This can be done in the virtual directory Properties->Directory Security->Anonymous access and authentication control panel or you can do it as a post-install action in the script:
 
 {{{
 # Set virtual directory authentication post-install
