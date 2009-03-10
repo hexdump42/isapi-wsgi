@@ -143,3 +143,18 @@ if __name__=='__main__':
     params.VirtualDirs = [vd]
     HandleCommandLine(params)
 }}}
+
+The Django WSGIRequest handler processes an empty PATH_INFO by setting it as a '/'. This is not compatible with the WSGI PEP (see http://code.djangoproject.com/ticket/9435) and can cause issues with some WSGI adaptors including isapi_wsgi. With isapi_wsgi, relative URLs at the root of a Django site would not work correctly. You can alter the behaviour by making a simple patch to django.core.handlers.wsgi.py. Change
+{{{
+class WSGIRequest(http.HttpRequest):
+    def __init__(self, environ):
+        script_name = base.get_script_name(environ)
+        #path_info = force_unicode(environ.get('PATH_INFO', u'/'))
+}}}
+To
+{{{
+class WSGIRequest(http.HttpRequest):
+    def __init__(self, environ):
+        script_name = base.get_script_name(environ)
+        path_info = force_unicode(environ.get('PATH_INFO', u''))
+}}}
