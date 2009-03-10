@@ -1,7 +1,7 @@
 #summary How to use Django or Pinax with isapi_wsgi.
 #labels Phase-Deploy
 
-Note: This has only been tested with Django 1.0.2 and isapi_wsgi.py R68 
+Note: This has only been tested with Django 1.0.2 and isapi_wsgi.py Release 0.4
 
 ==Django==
 
