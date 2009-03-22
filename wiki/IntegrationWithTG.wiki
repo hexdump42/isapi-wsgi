@@ -1,6 +1,6 @@
 #summary Serving TurboGears or CherryPy with ISAPI WSGI
 
-[http://whatschrisdoing.com/blog/ Chris] has written two blog posts which should get you going. You need to read both :-)
+[http://whatschrisdoing.com/blog/ Chris] has written two blog posts which should help get TurboGears and CherryPy working with isapi_wsgi. You need to read both :-)
 
 [http://whatschrisdoing.com/blog/2008/07/10/turbogears-isapi-wsgi-iis/ TurboGears + ISAPI-WSGI + IIS]
 
