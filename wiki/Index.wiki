@@ -1,9 +1,9 @@
 #summary Index
 
   * Changes
-  * !CherryPy
+  * CherryPy
   * Django
   * Installation
   * Pinax
   * Pylons
-  * !TurboGears
+  * TurboGears
