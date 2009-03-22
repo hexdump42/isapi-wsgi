@@ -1,4 +1,4 @@
-#summary Serving TurboGears/CherryPy with ISAPI WSGI
+#summary Serving TurboGears or CherryPy with ISAPI WSGI
 
 [http://whatschrisdoing.com/blog/ Chris] has written two blog posts which should get you going. You need to read both :-)
 
