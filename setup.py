@@ -25,7 +25,7 @@ long_description += open(changes).read()
 # PyPI will use rst2html from docutils to convert ABOUT.txt to HTML
 
 setup(name='isapi_wsgi',
-	version='0.4',
+	version='0.4.1',
 	description='A WSGI handler for ISAPI',
 	long_description=long_description,
 	author='Mark Rees',
