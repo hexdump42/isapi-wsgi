@@ -33,7 +33,11 @@ from isapi.simple import SimpleExtension
 from isapi.threaded_extension import ThreadPoolExtension
 from wsgiref.handlers import BaseHandler
 from wsgiref.util import shift_path_info
-import sys, os, stat, string
+import sys
+import os
+import stat
+import string
+import re
 try: from cStringIO import StringIO
 except ImportError: from StringIO import StringIO
 
@@ -44,6 +48,50 @@ def trace(*msgs):
     if not traceon: return
     for msg in msgs:
         print(msg)
+
+class FoldedCaseString(str):
+	"""
+	From jaraco.util.string.FoldedCase:
+
+	A case insensitive string class; behaves just like str
+	except compares equal when the only variation is case.
+	>>> s = FoldedCaseString('hello world')
+
+	>>> s == 'Hello World'
+	True
+
+	>>> 'Hello World' == s
+	True
+
+	>>> s.index('O')
+	4
+
+	>>> s.split('O')
+	['hell', ' w', 'rld']
+
+	>>> sorted(map(FoldedCaseString, ['GAMMA', 'alpha', 'Beta']))
+	['alpha', 'Beta', 'GAMMA']
+	"""
+	def __lt__(self, other):
+		return self.lower() < other.lower()
+	def __gt__(self, other):
+		return self.lower() > other.lower()
+	def __eq__(self, other):
+		return self.lower() == other.lower()
+	def __hash__(self):
+		return hash(self.lower())
+	# cache lower since it's likely to be called frequently.
+	def lower(self):
+		self._lower = super(FoldedCaseString, self).lower()
+		self.lower = lambda: self._lower
+		return self._lower
+
+	def index(self, sub):
+		return self.lower().index(sub.lower())
+
+	def split(self, splitter=' ', maxsplit=0):
+		pattern = re.compile(re.escape(splitter), re.I)
+		return pattern.split(self, maxsplit)
 
 class ECBDictAdapter(object):
     """
@@ -226,11 +274,16 @@ def getISAPIExtensionPath(ecb_server_vars):
     
     >>> getISAPIExtensionPath(dict(APPL_MD_PATH='/LM/W3SVC/1/ROOT'))
     ''
+    
+    This test exercises the less common mixed-case metadata path
+    >>> getISAPIExtensionPath(dict(APPL_MD_PATH='/LM/W3SVC/1/Root'))
+    ''
     """
     # Only way I see how to do this is to fetch the location of our ISAPI 
     # extension in the metabase then assume that '/ROOT/' is the root!
     # It will be something like MD='/LM/W3SVC/1/ROOT/test'
     appl_md_path = ecb_server_vars["APPL_MD_PATH"]
+    appl_md_path = FoldedCaseString(appl_md_path)
     site, pos = appl_md_path.split("/ROOT", 1)
     return pos
 
