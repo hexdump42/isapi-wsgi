@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.1
+~~~~~
+
+Make manipulation of ECB server variable APPL_MD_PATH case insensitive as string case appears to 
+be IIS version/installation dependent.
+
+Add serving from IIS root example - examples\demo_serve_from_root.py
+
 0.4
 ~~~
 

@@ -1,4 +1,4 @@
-= ISAPI_WSGI Handler 0.4 =
+= ISAPI_WSGI Handler 0.4.1 =
 
 
 == Dependencies ==
@@ -11,7 +11,7 @@
 
 == Installation ==
 
-Python 2.3 better is required.  To install, just unpack the archive, go to the
+Python 2.3 or better is required.  To install, just unpack the archive, go to the
 directory containing 'setup.py', and run::
 
 python setup.py install
@@ -43,6 +43,9 @@ Examples
 
  * demo_use_threadpool.py - app that displays a hello world and the wsgi
    environment using ISAPIThreadPoolHandler.
+
+ * demo_serve_from_root.py - serve an app from IIS root that displays a hello world 
+   and the wsgi environment using ISAPISimpleHandler.
  
  * echo.py - the test app from wsgi webkit. Used for isapi_wsgi unit tests.
 
@@ -79,7 +82,8 @@ Jason Coombs for improved virtual directory support and initial Python 3k suppor
 
 Peter Hunt for initial code review and support.
 
-Mark Hammonds win32 extensions which are doing all the hard work.
+Mark Hammond for the win32 extensions which are doing all the hard work, and his detailed
+expanations on mailing list and coding help.
 
 Phillip J. Eby for wsgiref which kept my implementation honest.
 

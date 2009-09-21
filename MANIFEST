@@ -9,5 +9,6 @@ examples\__init__.py
 examples\simple.py
 examples\demo.py
 examples\demo_use_threadpool.py
+examples\demo_serve_from_root.py
 examples\echo.py
 examples\multiple_apps.py
