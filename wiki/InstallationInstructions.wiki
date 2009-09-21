@@ -1,7 +1,7 @@
-#summary ISAPI_WSGI 0.4 Installation Notes
+#summary ISAPI_WSGI 0.4.1 Installation Notes
 #labels Featured
 
-=ISAPI_WSGI 0.4=
+=ISAPI_WSGI 0.4.1=
 
 This document relates the current version of the isapi_wsgi handler released in March 2009. 
 
