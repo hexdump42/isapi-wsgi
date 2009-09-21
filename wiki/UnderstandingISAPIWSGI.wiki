@@ -142,7 +142,28 @@ In the example above, the configuration takes place in a virtual directory calle
 
 Presuming you are using the thread pool handler, you can configure the application pool to use from the properties of the site or virtual directory in IIS, under the "Home directory" tab. This application pool can be configured to monitor memory usage, limit resource consumption, automatically restart processes and so on.
 
-= Using zc.buildout =
+== Security ==
+
+IIS may need write access to be able to write log files or other temporary files. The exact requirements will be application-dependent, but bear in mind that when your application runs in an IIS application pool, the user to run as can be set in the application pool configuration. The win32traceutil log should be able to tell you of any "permission denied" errors stopping your application from executing correctly.
+
+= Managing your environment =
+
+Most non-trivial applications will depend on third party libraries, and most people will not want to install those packages in their global Python environment. It is probably a good idea to install the Python Win32 extensions globally, but everything else (including `wsgiref` and `isapi_wsgi`) can be placed in a local environment.
+
+The two most common approaches for managing a local Pythone environment are [http://pypi.python.org/pypi/virtualenv virtualenv] and [http://www.buildout.org/ zc.buildout]
+
+== Using virtualenv ==
+
+Presuming your global Python environment is relatively clean, you should be able to load the packages in a specific virtualenv by placing the following at the top if your ISAPI-WSGI script:
+
+{{{
+import site
+site.addsitedir('/path/to/virtualenv/lib/python2.5/site-packages')
+}}}
+
+This assumes the virtualenv uses Python 2.5 and is installed in /path/to/virtualenv.
+
+== Using zc.buildout ==
 
 If you are using zc.buildout, you probably want to make sure that WSGI application contains the packages in the working set managed for your application by the buildout process. As long as you are using Paste Deploy to configure your WSGI application, there is a buildout recipe which can generate the ISAPI-WSGI script and even automatically install it for you. It can be used like this:
 
