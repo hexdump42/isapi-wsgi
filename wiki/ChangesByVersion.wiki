@@ -3,6 +3,9 @@
 
 =Changes=
 
+==0.4.1==
+
+Make manipulation of ECB server variable APPL_MD_PATH case insensitive as string case appears to be IIS version/installation dependent.
 
 ==0.4==
 
