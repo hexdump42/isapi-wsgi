@@ -124,7 +124,7 @@ This will configure the default IIS site. If you want to configure another site,
 python myapp.py install --server=MySite
 }}}
 
-MySite is the name of the site object in the IIS console.
+`MySite` is the name of the site object in the IIS console.
 
 When this script is run, a DLL file will be created in the current directory, called e.g. `_myapp.dll`. This is then intalled into IIS as wildcard handler.
 
