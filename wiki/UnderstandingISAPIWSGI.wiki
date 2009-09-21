@@ -24,11 +24,11 @@ To use ISAPI-WSGI, you first need to install:
 
 Under the hood, ISAPI-WSGI uses the `isapi` module from the Python Win32 extensions. The normal usage pattern is like this:
 
-  1. Create a script which loads (or contains) your WSGI application and initialies it
-  2. In this script, place a method `__ExtensionFactory__()` which returns an ISAPI-WSGI object (either the 'simple' or 'threadpool' handler)
-  3. Also in this script, add some initialisation boilerplate which is run when the script is executed through the interpreter.
-  4. The initialisation boilerplate creates a DLL file and installs it as a "wildcard" handler in IIS, either for an entire site, or for a virual directory in that site.
-  5. When a request is received by IIS, it will pass it onto the wildcard handler, which will translate the request into a WSGI request for your application.
+  # Create a script which loads (or contains) your WSGI application and initialies it
+  # In this script, place a method `__ExtensionFactory__()` which returns an ISAPI-WSGI object (either the 'simple' or 'threadpool' handler)
+  # Also in this script, add some initialisation boilerplate which is run when the script is executed through the interpreter.
+  # The initialisation boilerplate creates a DLL file and installs it as a "wildcard" handler in IIS, either for an entire site, or for a virual directory in that site.
+  # When a request is received by IIS, it will pass it onto the wildcard handler, which will translate the request into a WSGI request for your application.
 
 Note that the automatic IIS configuration in step 4 is convenience only. It is possible to configure IIS manually by installing a wildcard handler using the generated DLL file. If you prefer to do this, you can ignore the `VirtualDirs` list being created below. Do remember to turn off "Check for existence of file" in the IIS configuration.
 
