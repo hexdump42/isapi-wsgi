@@ -141,3 +141,28 @@ In the example above, the configuration takes place in a virtual directory calle
 = IIS configuration =
 
 Presuming you are using the thread pool handler, you can configure the application pool to use from the properties of the site or virtual directory in IIS, under the "Home directory" tab. This application pool can be configured to monitor memory usage, limit resource consumption, automatically restart processes and so on.
+
+= Using zc.buildout =
+
+If you are using zc.buildout, you probably want to make sure that WSGI application contains the packages in the working set managed for your application by the buildout process. As long as you are using Paste Deploy to configure your WSGI application, there is a buildout recipe which can generate the ISAPI-WSGI script and even automatically install it for you. It can be used like this:
+
+{{{
+[buildout]
+parts = wsgi
+develop = src/myapp
+
+[wsgi]
+recipe = collective.recipe.isapiwsgi
+eggs =
+    wsgiref
+    isapi_wsgi
+    myapp
+config-file = ${buildout:directory}/production-deployment.ini
+directory = /
+server = Default
+debug = True
+}}}
+
+This example configures the root of the IIS site called 'Default' with a script similar to the one shown above.
+
+See the [http://pypi.python.org/pypi/collective.recipe.isapiwsgi collective.recipe.isapiwsgi] documentation for more details.
