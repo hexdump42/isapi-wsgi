@@ -9,6 +9,6 @@ Documentation for isapi_wsgi 4.0.
     * [IntegrationWithDjango Integration with Django]
     * [IntegrationWithTG Integration with TurboGears and CherryPy]
     * [ServingAPylonsAppWithIIS Integration with Pylons]
-    * {ServingFromRoot Serving from IIS root]
+    * [ServingFromRoot Serving from IIS root]
   * [ChangesByVersion Changes By Version]
   * [CreditsAndThanks Credits & Thanks]
