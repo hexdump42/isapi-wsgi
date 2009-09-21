@@ -34,7 +34,7 @@ Note that the automatic IIS configuration in step 4 is convenience only. It is p
 
 = Example =
 
-Here is a simple example that uses [http://pythonpaste.org/deploy/ Paste Deploy] to load a WSGI application (configured in a Paste Deploy INI file not shown here), runs in a thread-pool, and installs to a virtual directory called 'wsgi-test':
+This is a simple example that uses [http://pythonpaste.org/deploy/ Paste Deploy]. Paste Deploy loads a WSGI application (configured in a Paste Deploy INI file not shown here), runs in a thread-pool, and installs to a virtual directory called 'wsgi-test':
 
 {{{
 # Enable tracing. Run 'python -m win32traceutil'
