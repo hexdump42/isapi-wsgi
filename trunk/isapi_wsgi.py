@@ -28,6 +28,10 @@ import sys
 if hasattr(sys, "isapidllhandle"):
     import win32traceutil
 
+try:
+	import isapi
+except ImportError:
+	raise ImportError("Could not find module isapi.  isapi_wsgi requires pywin32")
 from isapi import isapicon, ExtensionError
 from isapi.simple import SimpleExtension
 from isapi.threaded_extension import ThreadPoolExtension
