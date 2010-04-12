@@ -416,10 +416,12 @@ class IsapiWsgiHandler(BaseHandler):
                 pass
         
         # Other useful CGI variables
-        try:
-            environ['REMOTE_USER'] = ecb_dict['REMOTE_USER']
-        except KeyError:
-            pass
+        optional_cgienv_vars = ['REMOTE_USER', 'HTTPS',]
+        for cgivar in optional_cgienv_vars:
+            try:
+                environ[cgivar] = ecb_dict[cgivar]
+            except KeyError:
+                pass
 
         # and some custom ones.
         environ['isapi.ecb'] = self.ecb

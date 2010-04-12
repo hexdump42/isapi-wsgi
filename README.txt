@@ -1,4 +1,4 @@
-= ISAPI_WSGI Handler 0.4.1 =
+= ISAPI_WSGI Handler 0.4.2 =
 
 
 == Dependencies ==
@@ -79,6 +79,8 @@ Some unit tests
 Chris Lambacher for patches that removed limitations of my initial efforts.
 
 Jason Coombs for improved virtual directory support and initial Python 3k support.
+
+Sune Foldager & Dimitri Janczak for HTTPS environment variable patches.
 
 Peter Hunt for initial code review and support.
 
