@@ -1,4 +1,4 @@
-ISAPI WSGI 0.4
+ISAPI WSGI 0.4.2
 ==============
 
 License
