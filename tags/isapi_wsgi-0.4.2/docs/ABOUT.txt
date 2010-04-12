@@ -1,0 +1,60 @@
+ISAPI WSGI 0.4.2
+==============
+
+License
+=======
+
+ISAPI WSGI is licenced under the `MIT License
+<http://www.opensource.org/licenses/mit-license.php>`_.
+
+Description
+===========
+
+ISAPI WSGI is an implementation of WSGI (PEP 333) for running as an
+ISAPI extension under IIS. WSGI is considered as important standard
+for the future of web deployed Python code. There are implementations
+for CGI, mod_python, twisted, jython, etc.  This was the first
+implementation for IIS/ISAPI. 
+
+Dependencies
+============
+
+ISAPI WSGI is currently dependent on Mark Hammond's Python win32
+isapi extension, available in the
+`Python for Windows Extensions project
+<http://sourceforge.net/projects/pywin32>`_.
+
+Status
+======
+
+Thanks to contributions from the communitity, there are two
+implementations.  One is single-threaded; the other is multi-threaded.
+
+It has been used to run simple python wsgi applications thru to
+applications developed using the Django, Pylons and TurboGears frameworks.
+
+More details can be read on the `project page
+<http://google.code.com/p/isapi-wsgi>`_.
+
+Released versions are available from the project code site and PyPI.  Just
+``easy_install isapi-wsgi``.
+
+Development
+===========
+
+Download the latest version from the `subversion repository
+<http://isapi-wsgi.googlecode.com/svn/trunk#egg=isapi-wsgi-dev>`_ or
+install it using ``easy_install isapi-wsgi-dev``.
+
+Mailing List
+============
+
+`A mailing list <http://groups.google.com/group/isapi_wsgi-dev>`_
+is maintained using google groups.
+
+Maintainer
+==========
+
+`Mark Rees <http://hex-dump.blogspot.com>`_ mark dot john dot rees at
+gmail dot com
+
