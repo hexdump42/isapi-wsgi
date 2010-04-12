@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.4.2
+~~~~~
+
+Replicate ecb server varible HTTPS in wsgi environment so Trac and Mercurial can use isapi_wsgi over https.
+
 0.4.1
 ~~~~~
 
