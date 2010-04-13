@@ -10,7 +10,7 @@ This document relates the current version of the isapi_wsgi handler released in 
     * Python 2.3+
     * Python win32 extensions that include the isapi package
     * wsgiref library from http://cvs.eby-sarna.com/wsgiref/ (included in Python 2.5+)
-    * A windows webserver that supports ISAPI (isapi_wsgi has been tested on IIS 5.1 and 6.0) 
+    * A windows webserver that supports ISAPI (isapi_wsgi has been tested on IIS 5.1, 6.0 and 7.0) 
 
 ==Installation==
 
