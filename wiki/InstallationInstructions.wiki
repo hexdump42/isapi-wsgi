@@ -1,9 +1,9 @@
-#summary ISAPI_WSGI 0.4.1 Installation Notes
+#summary ISAPI_WSGI 0.4.2 Installation Notes
 #labels Featured
 
 =ISAPI_WSGI 0.4.1=
 
-This document relates the current version of the isapi_wsgi handler released in September 2009. 
+This document relates the current version of the isapi_wsgi handler released in April 2010.
 
 ==Dependencies==
 
@@ -16,10 +16,13 @@ This document relates the current version of the isapi_wsgi handler released in 
 
 Python 2.3 or better is required. 
 
-Download the archive or windows installer from [http://code.google.com/p/isapi-wsgi/downloads/list here]
+Get isapi-wsgi using any of these methods:
 
+     * from [http://pypi.python.org/pypi/isapi_wsgi/ PyPi]
+     * easy_install isapi_wgi
+     * Download the archive or windows installer from [http://code.google.com/p/isapi-wsgi/downloads/list here]
 
-To install the archive, just unpack it, go to the directory containing 'setup.py', and run:
+If you downloaded the archive, to install, just unpack it, go to the directory containing 'setup.py', and run:
 
 python setup.py install
 
