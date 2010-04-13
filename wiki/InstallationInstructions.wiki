@@ -19,7 +19,7 @@ Python 2.3 or better is required.
 Get isapi-wsgi using any of these methods:
 
      * from [http://pypi.python.org/pypi/isapi_wsgi/ PyPi]
-     * easy_install isapi_wgi
+     * easy_install isapi_wsgi
      * Download the archive or windows installer from [http://code.google.com/p/isapi-wsgi/downloads/list here]
 
 If you downloaded the archive, to install, just unpack it, go to the directory containing 'setup.py', and run:
