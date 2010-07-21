@@ -12,5 +12,6 @@ Documentation for isapi_wsgi 4.0.1
     * [ServingAPylonsAppWithIIS Integration with Pylons]
     * [ServingMercurialWithWSGIISAPI Integration with Mercurial]
     * [ServingFromRoot Serving from IIS root]
+    * [IntegrationWithMoinMoin Integration with MoinMoin]
   * [ChangesByVersion Changes By Version]
   * [CreditsAndThanks Credits & Thanks]
