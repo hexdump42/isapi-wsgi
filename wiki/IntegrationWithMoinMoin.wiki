@@ -1,4 +1,4 @@
-#How to run MoinMoin with isapi_wsgi 
+#summary Serving MoinMoin with ISAPI WSGI
 
 Dimitri Janczak has written a wiki page with the steps to get MoinMoin working under WIndows using isapi_wsgi.
 
