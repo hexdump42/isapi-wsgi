@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Documentation for isapi_wsgi 4.0.1
+Documentation for isapi_wsgi 4.0.2
 
   * [UnderstandingISAPIWSGI An overview of ISAPI-WSGI and how it works]
   * [InstallationInstructions Installation]
