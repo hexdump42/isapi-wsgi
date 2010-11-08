@@ -1,7 +1,7 @@
 #summary ISAPI_WSGI 0.4.2 Installation Notes
 #labels Featured
 
-=ISAPI_WSGI 0.4.1=
+=ISAPI_WSGI 0.4.2=
 
 This document relates the current version of the isapi_wsgi handler released in April 2010.
 
@@ -11,6 +11,7 @@ This document relates the current version of the isapi_wsgi handler released in 
     * Python win32 extensions that include the isapi package
     * wsgiref library from http://cvs.eby-sarna.com/wsgiref/ (included in Python 2.5+)
     * A windows webserver that supports ISAPI (isapi_wsgi has been tested on IIS 5.1, 6.0 and 7.0) 
+    * IIS 7.x must have IIS 6.0 Management Compatability installed.
 
 ==Installation==
 
