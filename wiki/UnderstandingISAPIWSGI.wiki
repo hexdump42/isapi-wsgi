@@ -141,7 +141,7 @@ In the example above, the configuration takes place in a virtual directory calle
 
 = IIS configuration =
 
-Presuming you are using the thread pool handler, you can configure the application pool to use from the properties of the site or virtual directory in IIS, under the "Home directory" tab. This application pool can be configured to monitor memory usage, limit resource consumption, automatically restart processes and so on.
+Presuming you are using the thread pool handler, you can configure the application pool to use from the properties of the site or virtual directory in IIS, under the "Home directory" tab. This application pool can be configured to monitor memory usage, limit resource consumption, automatically restart processes and so on. If you are using IIS 7.x, Isapi_wsgi requires that IIS 6.0 Management Compatibility is installed.
 
 == Security ==
 
