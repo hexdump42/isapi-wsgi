@@ -12,6 +12,7 @@ This document relates the current version of the isapi_wsgi handler released in 
     * wsgiref library from http://cvs.eby-sarna.com/wsgiref/ (included in Python 2.5+)
     * A windows webserver that supports ISAPI (isapi_wsgi has been tested on IIS 5.1, 6.0 and 7.0) 
     * *IIS 7.x must have IIS 6.0 Management Compatability installed.*
+    *  If IIS is 64bit but installed python is 32bit, enable 32bit applications in app pool. See http://code.google.com/p/isapi-wsgi/issues/detail?id=10
 
 ==Installation==
 
