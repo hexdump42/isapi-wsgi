@@ -32,6 +32,8 @@ isapi_wsgi.py will be installed in the 'site-packages' directory of your Python 
 
 (Note: for the Win32 installer release, just run the .exe file.)
 
+To help with deployment you may find [http://pypi.python.org/pypi/ISAPIWSGIHelper/ ISAPIWSGIHelper] useful. ISAPIWSGIHelper is a small command line script and some helper utilities to help bootstrap deployment of WSGI applications using isapi-wsgi with Microsoft IIS.
+
 ==Testing==
 
 As a user with admin privileges run the command:
