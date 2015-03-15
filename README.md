@@ -1,7 +1,7 @@
-= ISAPI_WSGI Handler 0.4.2 =
+# ISAPI_WSGI Handler 0.4.2 
 
 
-== Dependencies ==
+## Dependencies 
 
  * Python 2.3+
  * Python win32 extensions that include the isapi package
@@ -9,12 +9,12 @@
  * A windows webserver that supports ISAPI
     (isapi_wsgi to-date has been tested on IIS 5.1 & 6)
 
-== Installation ==
+## Installation
 
 Python 2.3 or better is required.  To install, just unpack the archive, go to the
 directory containing 'setup.py', and run::
 
-python setup.py install
+    python setup.py install
 
 isapi_wsgi.py will be installed in the 'site-packages' directory of your Python
 installation.  (Unless directed elsewhere; see the "Installing Python
@@ -23,18 +23,18 @@ installation locations, etc.).
 
 (Note: for the Win32 installer release, just run the .exe file.)
 
-== Usage ==
+## Usage
 
 See the mainline in isapi_wsgi.py or the samples in the examples subdirectory.
 
 Running the command:
 
-python isapi_wsgi.py 
+    python isapi_wsgi.py 
 
 will create a simple ISAPI test extension that can be accessed from a
 webbrowser using the url:
 
-http://localhost/isapi-wsgi-test/test
+    http://localhost/isapi-wsgi-test/test
 
 Examples
 
@@ -53,12 +53,12 @@ Examples
 
 Also it is worthwhile reading the docs that come with the win32 isapi extension.
 
-== Debugging ==
+## Debugging
 
 A simple trace function is provided that will allow viewing of print statements
 using win32traceutil if the isapi_wsgi traceon global is set to 1.
 
-== Caveats ==
+## Caveats
 
 If you make a change to your python code and things do not seem to work, try
 restarting IIS. Starting and stopping the website within MMC is not enough.
@@ -68,13 +68,13 @@ the environment and cleanly reload any changes to your code.
 The extension dll must be run from a local drive. There may be issues if you
 run from a mapped drive.
 
-== To Do ==
+## To Do
 
 Better documentation
 
 Some unit tests
 
-== Credits ==
+## Credits
 
 Chris Lambacher for patches that removed limitations of my initial efforts.
 
