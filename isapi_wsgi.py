@@ -416,7 +416,14 @@ class IsapiWsgiHandler(BaseHandler):
                 pass
         
         # Other useful CGI variables
-        optional_cgienv_vars = ['REMOTE_USER', 'HTTPS',]
+        # Other useful CGI variables
+        optional_cgienv_vars = ['REMOTE_USER', 'HTTPS',
+                                'CERT_COOKIE', 'CERT_FLAGS',
+                                'CERT_ISSUER', 'CERT_KEYSIZE',
+                                'CERT_SECRETKEYSIZE', 'CERT_SERIALNUMBER',
+                                'CERT_SERVER_ISSUER', 'CERT_SERVER_SUBJECT',
+                                'CERT_SUBJECT',
+                               ]
         for cgivar in optional_cgienv_vars:
             try:
                 environ[cgivar] = ecb_dict[cgivar]
