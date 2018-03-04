@@ -1,9 +1,9 @@
 # ISAPI_WSGI Handler 0.4.2 
 
-[![Latest Version](https://pypip.in/version/isapi-wsgi/badge.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
-[![Development Status](https://pypip.in/status/isapi-wsgi/badge.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
-[![Supported Python versions](https://pypip.in/py_versions/isapi-wsgi/badge.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
-[![Supported Python implementations](https://pypip.in/implementation/isapi-wsgi/badge.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
+[![Latest Version](https://img.shields.io/pypi/v/isapi-wsgi.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
+[![Development Status](https://img.shields.io/pypi/status/isapi-wsgi.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/isapi-wsgi.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
+[![Supported Python implementations](https://img.shields.io/pypi/implementation/isapi-wsgi.svg)](https://pypi.python.org/pypi/isapi-wsgi/)
 
 ## Dependencies 
 
