@@ -6,6 +6,7 @@ on:
 jobs:
   s3Backup:
     runs-on: ubuntu-latest
+    environment: backup
     steps:
       - uses: actions/checkout@v2
       - name: S3 Backup
