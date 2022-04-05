@@ -1,4 +1,4 @@
-name: Mirror repo to S3
+name: Mirror repo to S3 on commit
 on:
   push:
     branches:
